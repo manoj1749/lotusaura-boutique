@@ -5,7 +5,8 @@ import { ModeToggle } from "@/components/mode-toggle";
 
 export default function HomePage() {
   return (
-    <main className="bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark transition-colors duration-300">
+    // <main className="bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark transition-colors duration-300">
+    <main className="bg-secondary/30 bg-background text-foreground transition-colors duration-300">
       {/* Top announcement bar */}
       <div className="bg-secondary/30 dark:bg-surface-dark/50 py-2 text-center text-sm font-medium tracking-wide">
       <span className="text-primary-dark dark:text-primary">
@@ -81,7 +82,7 @@ export default function HomePage() {
 
         <div className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6 h-full flex items-center">
           <div className="max-w-xl space-y-6">
-            <span className="inline-block py-1 px-3 border border-primary text-primary uppercase text-[10px] tracking-[0.3em] bg-surface-light/60 dark:bg-surface-dark/60 backdrop-blur-md rounded-sm">
+            <span className="inline-block py-1 px-3 border border-primary text-primary uppercase text-[10px] tracking-[0.3em] bg-accent/40 text-accent-foreground backdrop-blur-md rounded-sm">
               New Arrivals
             </span>
 
@@ -90,7 +91,7 @@ export default function HomePage() {
               Woven in Tradition.
             </h1>
 
-            <p className="text-base md:text-lg text-text-light/70 dark:text-text-dark/70 max-w-md border-l-4 border-primary pl-4">
+            <p className="text-base md:text-lg text-muted-foreground max-w-md border-l-4 border-primary pl-4">
               Discover our exclusive range of handpicked sarees and ethnic wear,
               crafted to perfection for the modern woman.
             </p>
@@ -98,7 +99,7 @@ export default function HomePage() {
             <div className="pt-2 flex flex-wrap gap-3">
               <a
                 href="#collections"
-                className="bg-primary hover:bg-primary-dark text-white px-8 py-3 rounded-sm uppercase tracking-widest text-xs font-bold shadow-lg hover:shadow-xl transition"
+                className="bg-primary hover:bg-primary-dark text-white dark:text-black px-8 py-3 rounded-sm uppercase tracking-widest text-xs font-bold shadow-lg hover:shadow-xl transition"
               >
                 View Collection
               </a>
@@ -123,7 +124,7 @@ export default function HomePage() {
               <Gem className="h-6 w-6" />
             </div>
             <h3 className="font-[var(--font-display)] text-xl mb-2">Premium Quality</h3>
-            <p className="text-sm text-text-light/70 dark:text-text-dark/70">
+            <p className="text-sm text-muted-foreground">
               Handpicked fabrics ensuring the finest texture and longevity.
             </p>
           </div>
@@ -133,7 +134,7 @@ export default function HomePage() {
               <Scissors className="h-6 w-6" />
             </div>
             <h3 className="font-[var(--font-display)] text-xl mb-2">Custom Tailoring</h3>
-            <p className="text-sm text-text-light/70 dark:text-text-dark/70">
+            <p className="text-sm text-muted-foreground">
               Perfect fits customized to your measurements upon request.
             </p>
           </div>
@@ -143,7 +144,7 @@ export default function HomePage() {
               <Truck className="h-6 w-6" />
             </div>
             <h3 className="font-[var(--font-display)] text-xl mb-2">Global Delivery</h3>
-            <p className="text-sm text-text-light/70 dark:text-text-dark/70">
+            <p className="text-sm text-muted-foreground">
               Bringing our heritage to your doorstep, anywhere in the world.
             </p>
           </div>
@@ -193,7 +194,7 @@ export default function HomePage() {
             ].map((p) => (
               <div
                 key={p.title}
-                className="group relative bg-surface-light dark:bg-surface-dark rounded-lg shadow-md hover:shadow-2xl transition-all duration-300 border border-transparent hover:border-primary/20 overflow-hidden"
+                className="group relative bg-card text-card-foreground rounded-lg shadow-md hover:shadow-2xl transition-all duration-300 border border-transparent hover:border-primary/20 overflow-hidden"
               >
                 <div className="relative aspect-[3/4] overflow-hidden">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -216,7 +217,7 @@ export default function HomePage() {
                   <h3 className="font-[var(--font-display)] text-2xl mb-1 group-hover:text-primary transition">
                     {p.title}
                   </h3>
-                  <p className="text-sm text-text-light/70 dark:text-text-dark/70 mb-4">{p.subtitle}</p>
+                  <p className="text-sm text-muted-foreground mb-4">{p.subtitle}</p>
                   <p className="text-lg font-bold mb-6">{p.price}</p>
 
                   <a
@@ -248,14 +249,14 @@ export default function HomePage() {
       <section id="about" className="py-20 bg-background-light dark:bg-background-dark">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div className="rounded-2xl bg-gradient-to-br from-[#D4AF37]/80 to-[#E8D3D9]/40 p-4">
-            <div className="rounded-xl overflow-hidden bg-surface-light dark:bg-surface-dark shadow">
+            <div className="rounded-xl overflow-hidden bg-card text-card-foreground shadow">
               <div className="h-[320px] md:h-[380px] flex items-center justify-center">
                 <div className="text-center px-6">
                   <div className="text-primary-dark dark:text-primary text-xs font-bold uppercase tracking-widest mb-2">
                     Visual Placeholder
                   </div>
                   <div className="font-[var(--font-display)] text-3xl">Lookbook / Brand Image</div>
-                  <div className="mt-2 text-sm text-text-light/70 dark:text-text-dark/70">
+                  <div className="mt-2 text-sm text-muted-foreground">
                     We’ll replace this with your brand photo later.
                   </div>
                 </div>
@@ -270,12 +271,12 @@ export default function HomePage() {
             <h3 className="font-[var(--font-display)] text-4xl mt-2 mb-4">
               Label by Lotus Aura
             </h3>
-            <p className="text-sm leading-7 text-text-light/70 dark:text-text-dark/70">
+            <p className="text-sm leading-7 text-muted-foreground">
               Born from a passion for India’s rich textile heritage, Lotus Aura is more than just a boutique—
               it’s a celebration of womanhood. We believe that every saree tells a story, and every drape should
               evoke a feeling of royalty.
             </p>
-            <p className="mt-4 text-sm leading-7 text-text-light/70 dark:text-text-dark/70">
+            <p className="mt-4 text-sm leading-7 text-muted-foreground">
               Our collections are curated with love, focusing on intricate weaves, contemporary motifs, and a
               color palette that resonates with the modern Indian woman.
             </p>
@@ -297,7 +298,7 @@ export default function HomePage() {
         {/* Testimonial */}
         <div className="mx-auto max-w-4xl px-4 sm:px-6 mt-16 text-center">
           <div className="text-5xl text-primary/30">“</div>
-          <p className="font-[var(--font-display)] italic text-lg md:text-xl text-text-light/70 dark:text-text-dark/70">
+          <p className="font-[var(--font-display)] italic text-lg md:text-xl text-muted-foreground">
             The saree I purchased was absolutely breathtaking. The quality of the silk and the intricacy of the work
             exceeded my expectations. Highly recommended!
           </p>
