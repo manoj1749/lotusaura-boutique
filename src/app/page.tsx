@@ -26,7 +26,7 @@ export default function HomePage() {
               </div>
 
               <div>
-                <div className="font-[var(--font-display)] text-xl sm:text-2xl font-bold tracking-wide">
+                <div className="font-display text-xl sm:text-2xl font-bold tracking-wide">
                   Lotus Aura
                 </div>
                 <div className="text-[10px] uppercase tracking-[0.2em] text-primary">
@@ -80,13 +80,13 @@ export default function HomePage() {
           <div className="absolute inset-0 bg-gradient-to-r from-background-light/80 dark:from-background-dark/70 via-transparent to-transparent" />
         </div>
 
-        <div className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6 h-full flex items-center">
+        <div className="relative z-10 container mx-auto px-6 h-full flex items-center">
           <div className="max-w-xl space-y-6">
             <span className="inline-block py-1 px-3 border border-primary text-primary uppercase text-[10px] tracking-[0.3em] bg-accent/40 text-accent-foreground backdrop-blur-md rounded-sm">
               New Arrivals
             </span>
 
-            <h1 className="font-[var(--font-display)] text-5xl md:text-7xl leading-tight">
+            <h1 className="font-display text-5xl md:text-7xl leading-tight">
               Timeless <span className="italic text-primary">Elegance</span>,<br />
               Woven in Tradition.
             </h1>
@@ -123,7 +123,7 @@ export default function HomePage() {
             <div className="w-12 h-12 mx-auto mb-4 flex items-center justify-center rounded-full bg-primary/10 text-primary">
               <Gem className="h-6 w-6" />
             </div>
-            <h3 className="font-[var(--font-display)] text-xl mb-2">Premium Quality</h3>
+            <h3 className="font-display text-xl mb-2">Premium Quality</h3>
             <p className="text-sm text-muted-foreground">
               Handpicked fabrics ensuring the finest texture and longevity.
             </p>
@@ -133,7 +133,7 @@ export default function HomePage() {
             <div className="w-12 h-12 mx-auto mb-4 flex items-center justify-center rounded-full bg-primary/10 text-primary">
               <Scissors className="h-6 w-6" />
             </div>
-            <h3 className="font-[var(--font-display)] text-xl mb-2">Custom Tailoring</h3>
+            <h3 className="font-display text-xl mb-2">Custom Tailoring</h3>
             <p className="text-sm text-muted-foreground">
               Perfect fits customized to your measurements upon request.
             </p>
@@ -143,7 +143,7 @@ export default function HomePage() {
             <div className="w-12 h-12 mx-auto mb-4 flex items-center justify-center rounded-full bg-primary/10 text-primary">
               <Truck className="h-6 w-6" />
             </div>
-            <h3 className="font-[var(--font-display)] text-xl mb-2">Global Delivery</h3>
+            <h3 className="font-display text-xl mb-2">Global Delivery</h3>
             <p className="text-sm text-muted-foreground">
               Bringing our heritage to your doorstep, anywhere in the world.
             </p>
@@ -158,7 +158,7 @@ export default function HomePage() {
             <div className="text-primary text-xs font-bold uppercase tracking-widest">
               Our Selection
             </div>
-            <h2 className="font-[var(--font-display)] text-4xl mt-2 mb-4">
+            <h2 className="font-display text-4xl mt-2 mb-4">
               Featured Collections
             </h2>
             <div className="h-1 w-24 bg-primary mx-auto rounded-full" />
@@ -214,7 +214,7 @@ export default function HomePage() {
                 </div>
 
                 <div className="p-6 text-center">
-                  <h3 className="font-[var(--font-display)] text-2xl mb-1 group-hover:text-primary transition">
+                  <h3 className="font-display text-2xl mb-1 group-hover:text-primary transition">
                     {p.title}
                   </h3>
                   <p className="text-sm text-muted-foreground mb-4">{p.subtitle}</p>
@@ -255,7 +255,7 @@ export default function HomePage() {
                   <div className="text-primary-dark dark:text-primary text-xs font-bold uppercase tracking-widest mb-2">
                     Visual Placeholder
                   </div>
-                  <div className="font-[var(--font-display)] text-3xl">Lookbook / Brand Image</div>
+                  <div className="font-display text-3xl">Lookbook / Brand Image</div>
                   <div className="mt-2 text-sm text-muted-foreground">
                     We’ll replace this with your brand photo later.
                   </div>
@@ -268,7 +268,7 @@ export default function HomePage() {
             <div className="text-primary text-xs font-bold uppercase tracking-widest">
               Our Story
             </div>
-            <h3 className="font-[var(--font-display)] text-4xl mt-2 mb-4">
+            <h3 className="font-display text-4xl mt-2 mb-4">
               Label by Lotus Aura
             </h3>
             <p className="text-sm leading-7 text-muted-foreground">
@@ -298,7 +298,7 @@ export default function HomePage() {
         {/* Testimonial */}
         <div className="mx-auto max-w-4xl px-4 sm:px-6 mt-16 text-center">
           <div className="text-5xl text-primary/30">“</div>
-          <p className="font-[var(--font-display)] italic text-lg md:text-xl text-muted-foreground">
+          <p className="font-display italic text-lg md:text-xl text-muted-foreground">
             The saree I purchased was absolutely breathtaking. The quality of the silk and the intricacy of the work
             exceeded my expectations. Highly recommended!
           </p>
@@ -312,7 +312,7 @@ export default function HomePage() {
       <footer className="bg-surface-dark text-text-dark">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 py-12 grid grid-cols-1 md:grid-cols-4 gap-10">
           <div className="md:col-span-1">
-            <div className="font-[var(--font-display)] text-2xl font-bold">Lotus Aura</div>
+            <div className="font-display text-2xl font-bold">Lotus Aura</div>
             <p className="mt-3 text-sm text-text-dark/70">
               Bringing the essence of traditional weaving to the contemporary wardrobe. Crafted for her, with love.
             </p>

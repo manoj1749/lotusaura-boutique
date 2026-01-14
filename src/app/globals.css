@@ -131,4 +131,10 @@
   body {
     @apply bg-background text-foreground;
   }
+  .font-display {
+    font-family: var(--font-display);
+  }
+  .font-body {
+    font-family: var(--font-body);
+  }
 }
