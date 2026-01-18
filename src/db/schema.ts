@@ -9,5 +9,9 @@ export const products = sqliteTable("products", {
   imageUrl: text("image_url").notNull(),
   imagePath: text("image_path").notNull(),
   category: text("category"),
+  stock: integer("stock").notNull().default(0),
+  tags: text("tags"),
+  tagColor: text("tag_color"),
+  published: integer("published", { mode: "boolean" }).default(true),
   createdAt: text("timestamp").default(sql`CURRENT_TIMESTAMP`),
 });
