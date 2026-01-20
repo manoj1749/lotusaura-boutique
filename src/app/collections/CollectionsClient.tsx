@@ -128,32 +128,43 @@ function CollectionsContent() {
 
         {/* Mobile Filter & Content */}
         <div className="flex-1">
-          <div className="flex items-center justify-between mb-6">
-            <h1 className="font-display text-3xl font-bold">All Products</h1>
-            
-            <div className="flex items-center gap-2">
-                <Sheet>
-                  <SheetTrigger asChild>
-                    <Button variant="outline" size="sm" className="md:hidden">
-                      <Filter className="mr-2 h-4 w-4" />
-                      Filters
-                    </Button>
-                  </SheetTrigger>
-                  <SheetContent side="left">
-                    <div className="pt-6">
-                      <ProductFilters 
-                        categories={categories}
-                        selectedCategories={selectedCategories}
-                        onCategoryChange={handleCategoryChange}
-                        onClearFilters={clearFilters}
-                      />
-                    </div>
-                  </SheetContent>
-                </Sheet>
+        <div className="mb-6">
+        {/* Title */}
+        <h1 className="font-display text-4xl font-bold leading-none md:text-3xl">
+          All <br className="md:hidden" />
+          Products
+        </h1>
 
-              <ProductSort value={sortBy} onValueChange={setSortBy} />
-            </div>
+        {/* Controls */}
+        <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          {/* Left: Filters button */}
+          <div className="flex items-center gap-2">
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button variant="outline" size="sm" className="md:hidden w-full sm:w-auto justify-center">
+                  <Filter className="mr-2 h-4 w-4" />
+                  Filters
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="left">
+                <div className="pt-6">
+                  <ProductFilters
+                    categories={categories}
+                    selectedCategories={selectedCategories}
+                    onCategoryChange={handleCategoryChange}
+                    onClearFilters={clearFilters}
+                  />
+                </div>
+              </SheetContent>
+            </Sheet>
           </div>
+
+          {/* Right: Sort */}
+          <div className="w-full sm:w-[260px]">
+            <ProductSort value={sortBy} onValueChange={setSortBy} />
+          </div>
+          </div>
+          </div>        
           {loadingProducts ? (
             <div className="min-h-[60vh] flex items-center justify-center text-muted-foreground">
               Loading products...
