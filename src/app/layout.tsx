@@ -4,6 +4,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { Playfair_Display, Lato } from "next/font/google";
 import { CartProvider } from "@/components/cart/CartProvider";
 import { CartDrawer } from "@/components/cart/CartDrawer";
+import { Suspense } from "react";
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -25,10 +26,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     >
       <body className="font-body bg-background text-foreground transition-colors duration-300">
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
-          <CartProvider>
-            {children}
-            <CartDrawer />
-          </CartProvider>
+          <Suspense fallback={null}>
+            <CartProvider>
+              {children}
+              <CartDrawer />
+            </CartProvider>
+          </Suspense>
           <Toaster position="top-center" duration={2000} />
         </ThemeProvider>
       </body>
