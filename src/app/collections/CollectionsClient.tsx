@@ -146,15 +146,41 @@ function CollectionsContent() {
                   Filters
                 </Button>
               </SheetTrigger>
-              <SheetContent side="left">
-                <div className="pt-6">
+              <SheetContent
+                side="left"
+                className="w-[85vw] max-w-sm px-6 py-6"
+              >
+                {/* Header */}
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="font-display text-xl font-semibold">Filters</h2>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={clearFilters}
+                    className="text-muted-foreground"
+                  >
+                    Reset
+                  </Button>
+                </div>
+
+                <div className="space-y-8">
                   <ProductFilters
+                    showHeader={false}
                     categories={categories}
                     selectedCategories={selectedCategories}
                     onCategoryChange={handleCategoryChange}
                     onClearFilters={clearFilters}
                   />
                 </div>
+                <div className="sticky bottom-0 bg-background pt-6 border-t">
+                <Button
+                  variant="outline"
+                  className="w-full"
+                  onClick={clearFilters}
+                >
+                  Clear Filters
+                </Button>
+              </div>
               </SheetContent>
             </Sheet>
           </div>

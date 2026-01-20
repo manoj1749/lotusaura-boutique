@@ -12,6 +12,7 @@ interface ProductFiltersProps {
   onCategoryChange: (category: string, checked: boolean) => void;
   // Price range implementation can be added later as it's more complex UI
   onClearFilters: () => void;
+  showHeader?: boolean;
 }
 
 export function ProductFilters({
@@ -19,9 +20,11 @@ export function ProductFilters({
   selectedCategories,
   onCategoryChange,
   onClearFilters,
+  showHeader = true
 }: ProductFiltersProps) {
   return (
     <div className="space-y-6">
+      {showHeader && (
       <div>
         <div className="flex items-center justify-between mb-4">
           <h3 className="font-semibold text-lg">Filters</h3>
@@ -37,6 +40,7 @@ export function ProductFilters({
         </div>
         <Separator />
       </div>
+      )}
 
       <div>
         <h4 className="font-medium mb-3">Categories</h4>
@@ -58,6 +62,15 @@ export function ProductFilters({
               </Label>
             </div>
           ))}
+          <div className="pt-4">
+            <Button
+              variant="outline"
+              className="w-full"
+              onClick={onClearFilters}
+            >
+              Clear Filters
+            </Button>
+          </div>
         </div>
       </div>
     </div>
