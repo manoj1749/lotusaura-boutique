@@ -182,7 +182,7 @@ export default function AdminProductsPage() {
 
       toast.success(editingId ? "Product updated" : "Product added");
       setOpen(false);
-      openCreate(); // reset
+      // openCreate(); // reset
       await load();
     } catch (e: any) {
       toast.error(e?.message ?? "Something went wrong");
@@ -201,6 +201,8 @@ export default function AdminProductsPage() {
       }
       toast.success("Deleted");
       setDeleteId(null);
+      setOpen(false);
+      setEditingId(null);
       await load();
     } catch (e: any) {
       toast.error(e?.message ?? "Delete failed");
@@ -257,7 +259,23 @@ export default function AdminProductsPage() {
              onChange={(e) => setSearch(e.target.value)} 
              className="w-[200px]"
            />
-           <Dialog open={open} onOpenChange={setOpen}>
+           <Dialog open={open} onOpenChange={(v) => {
+                  setOpen(v);
+                  if (!v) {
+                    // reset when dialog closes
+                    setEditingId(null);
+                    setName("");
+                    setCategory("");
+                    setIsCustomCategory(false);
+                    setPrice(999);
+                    setStock(0);
+                    setTags("");
+                    setPublished(true);
+                    setSubmitting(false);
+                    setDescription("");
+                    setFile(null);
+                  }
+            }}>
           <DialogTrigger asChild>
             <Button onClick={openCreate}>Add product</Button>
           </DialogTrigger>
@@ -299,7 +317,7 @@ export default function AdminProductsPage() {
                    </div>
                 ) : (
                   <Select 
-                    value={categories.includes(category as any) ? category : (category ? "custom" : "")} 
+                    value={categories.includes(category as any) ? category : ""}
                     onValueChange={(val) => {
                       if (val === "new") {
                         setIsCustomCategory(true);
