@@ -6,6 +6,7 @@ import { Product } from "@/types/product";
 import { Cart, CartItem, CartContextType } from "@/types/cart";
 import { calculateTotal, calculateItemCount, formatPrice } from "@/lib/cart-utils";
 import { generateWhatsAppMessage, getWhatsAppLink } from "@/lib/whatsapp";
+import { usePathname, useSearchParams } from "next/navigation";
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
@@ -119,6 +120,14 @@ export function CartProvider({ children }: { children: ReactNode }) {
     // The actual sending happens in the component which has access to the phone number
     return generateWhatsAppMessage(cart.items, ""); 
   };
+
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    // Close cart on ANY navigation (back, forward, link click)
+    setIsCartOpen(false);
+  }, [pathname, searchParams]);
 
   return (
     <CartContext.Provider

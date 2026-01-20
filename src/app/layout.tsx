@@ -29,7 +29,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             {children}
             <CartDrawer />
           </CartProvider>
-          <Toaster />
+          <Toaster position="top-center" duration={2000} />
         </ThemeProvider>
       </body>
     </html>

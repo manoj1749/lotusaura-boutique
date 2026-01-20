@@ -94,6 +94,25 @@ function CollectionsContent() {
     })();
   }, []);
 
+  const hasFilters = selectedCategories.length > 0;
+  const isCatalogEmpty = !loadingProducts && products.length === 0;
+  const isFilteredEmpty =
+    !loadingProducts && products.length > 0 && filteredProducts.length === 0 && hasFilters;
+
+  const PAGE_SIZE = 9; // change to 6/12 if you want
+  const [page, setPage] = useState(1);
+  const totalPages = Math.max(1, Math.ceil(filteredProducts.length / PAGE_SIZE));
+  const paginatedProducts = useMemo(() => {
+    const start = (page - 1) * PAGE_SIZE;
+    return filteredProducts.slice(start, start + PAGE_SIZE);
+  }, [filteredProducts, page]);
+  const startIndex = filteredProducts.length === 0 ? 0 : (page - 1) * PAGE_SIZE + 1;
+  const endIndex = Math.min(page * PAGE_SIZE, filteredProducts.length);
+
+  useEffect(() => {
+    setPage(1);
+  }, [selectedCategories, sortBy]);
+
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 py-12">
       <div className="flex flex-col md:flex-row gap-8">
@@ -135,12 +154,59 @@ function CollectionsContent() {
               <ProductSort value={sortBy} onValueChange={setSortBy} />
             </div>
           </div>
+          {loadingProducts ? (
+            <div className="min-h-[60vh] flex items-center justify-center text-muted-foreground">
+              Loading products...
+            </div>
+          ) : isCatalogEmpty ? (
+            <div className="py-16 text-center">
+              <p className="font-display text-xl font-semibold">No products available yet.</p>
+              <p className="mt-2 text-sm text-muted-foreground">Check back soon ✨</p>
+            </div>
+          ) : isFilteredEmpty ? (
+            <div className="py-16 text-center">
+              <p className="font-display text-xl font-semibold">No products matching your criteria.</p>
+              <Button variant="outline" className="mt-4" onClick={clearFilters}>
+                Clear filters
+              </Button>
+            </div>
+          ) : (
+            <>
+            <div className="mb-4 text-sm text-muted-foreground">
+              Showing {startIndex}-{endIndex} of {filteredProducts.length} products
+            </div>
+            <ProductGrid products={paginatedProducts} showAddToCart={true} />
 
-          <div className="mb-4 text-sm text-muted-foreground">
-            Showing {filteredProducts.length} products
-          </div>
+            {/* Pagination Controls */}
+            {totalPages > 1 && (
+              <div className="mt-10 flex items-center justify-between">
+                <p className="text-sm text-muted-foreground">
+                  Page {page} of {totalPages}
+                </p>
 
-          <ProductGrid products={filteredProducts} showAddToCart={true} />
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setPage((p) => Math.max(1, p - 1))}
+                    disabled={page === 1}
+                  >
+                    Previous
+                  </Button>
+
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                    disabled={page === totalPages}
+                  >
+                    Next
+                  </Button>
+                </div>
+              </div>
+            )}
+            </>
+          )}
         </div>
       </div>
     </div>
@@ -149,12 +215,22 @@ function CollectionsContent() {
 
 export default function CollectionsPage() {
   return (
+    // <main className="bg-background min-h-screen flex flex-col">
+    //   <AnnouncementBar />
+    //   <Navbar />
+    //   <Suspense fallback={<div className="h-96 flex items-center justify-center">Loading...</div>}>
+    //     <CollectionsContent />
+    //   </Suspense>
+    //   <Footer />
+    // </main>
     <main className="bg-background min-h-screen flex flex-col">
       <AnnouncementBar />
       <Navbar />
-      <Suspense fallback={<div className="h-96 flex items-center justify-center">Loading...</div>}>
-        <CollectionsContent />
-      </Suspense>
+      <div className="flex-1">
+        <Suspense fallback={<div className="h-96 flex items-center justify-center">Loading...</div>}>
+          <CollectionsContent />
+        </Suspense>
+      </div>
       <Footer />
     </main>
   );
