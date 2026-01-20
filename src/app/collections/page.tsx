@@ -8,18 +8,24 @@ import { AnnouncementBar } from "@/components/layout/AnnouncementBar";
 import { ProductGrid } from "@/components/products/ProductGrid";
 import { ProductFilters } from "@/components/products/ProductFilters";
 import { ProductSort } from "@/components/products/ProductSort";
-import { PRODUCTS } from "@/lib/data";
 import { SortOption } from "@/types/product";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Filter } from "lucide-react";
+import { useEffect } from "react";
 
 // Get unique categories
-const CATEGORIES = Array.from(new Set(PRODUCTS.map(p => p.category).filter(Boolean))) as string[];
 
 function CollectionsContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const [products, setProducts] = useState<any[]>([]);
+  const categories = useMemo(
+    () => Array.from(new Set(products.map((p) => p.category).filter(Boolean))) as string[],
+    [products]
+  );
+
+  const [loadingProducts, setLoadingProducts] = useState(true);
   
   // State for client-side filtering (URL matching would be ideal for shareability)
   // For simplicity MVP, using state + initial check from URL
@@ -30,7 +36,7 @@ function CollectionsContent() {
   const [sortBy, setSortBy] = useState<SortOption>('newest');
 
   const filteredProducts = useMemo(() => {
-    let result = [...PRODUCTS];
+    let result = [...products];
 
     if (selectedCategories.length > 0) {
       result = result.filter(p => p.category && selectedCategories.includes(p.category));
@@ -60,7 +66,7 @@ function CollectionsContent() {
     }
 
     return result;
-  }, [selectedCategories, sortBy]);
+  }, [products, selectedCategories, sortBy]);
 
   const handleCategoryChange = (category: string, checked: boolean) => {
     setSelectedCategories(prev => {
@@ -75,13 +81,26 @@ function CollectionsContent() {
     router.push('/collections'); // Clear URL params
   };
 
+  useEffect(() => {
+    (async () => {
+      try {
+        setLoadingProducts(true);
+        const res = await fetch("/api/admin/products", { cache: "no-store" });
+        const data = await res.json();
+        setProducts(data.products ?? []);
+      } finally {
+        setLoadingProducts(false);
+      }
+    })();
+  }, []);
+
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 py-12">
       <div className="flex flex-col md:flex-row gap-8">
         {/* Desktop Sidebar */}
         <div className="hidden md:block w-64 shrink-0">
           <ProductFilters 
-            categories={CATEGORIES}
+            categories={categories}
             selectedCategories={selectedCategories}
             onCategoryChange={handleCategoryChange}
             onClearFilters={clearFilters}
@@ -104,7 +123,7 @@ function CollectionsContent() {
                   <SheetContent side="left">
                     <div className="pt-6">
                       <ProductFilters 
-                        categories={CATEGORIES}
+                        categories={categories}
                         selectedCategories={selectedCategories}
                         onCategoryChange={handleCategoryChange}
                         onClearFilters={clearFilters}
