@@ -9,7 +9,7 @@ import { ProductGrid } from "@/components/products/ProductGrid";
 import { ProductFilters } from "@/components/products/ProductFilters";
 import { ProductSort } from "@/components/products/ProductSort";
 import { SortOption } from "@/types/product";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Filter } from "lucide-react";
 import { useEffect } from "react";
@@ -150,6 +150,7 @@ function CollectionsContent() {
                 side="left"
                 className="w-[85vw] max-w-sm px-6 py-6"
               >
+                <SheetTitle className="sr-only">Filters</SheetTitle>
                 {/* Header */}
                 <div className="flex items-center justify-between mb-6">
                   <h2 className="font-display text-xl font-semibold">Filters</h2>
@@ -172,15 +173,6 @@ function CollectionsContent() {
                     onClearFilters={clearFilters}
                   />
                 </div>
-                <div className="sticky bottom-0 bg-background pt-6 border-t">
-                <Button
-                  variant="outline"
-                  className="w-full"
-                  onClick={clearFilters}
-                >
-                  Clear Filters
-                </Button>
-              </div>
               </SheetContent>
             </Sheet>
           </div>
