@@ -1,6 +1,6 @@
 "use client";
 
-import { MessageCircle } from "lucide-react";
+import { WhatsApp } from "@/components/icons/WhatsApp";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/hooks/useCart";
 import { getWhatsAppLink, WHATSAPP_NUMBER } from "@/lib/whatsapp";
@@ -25,7 +25,7 @@ export function CheckoutButton({ phoneNumber = WHATSAPP_NUMBER, disabled }: Chec
       onClick={handleCheckout}
       disabled={disabled || cart.items.length === 0}
     >
-      <MessageCircle className="h-5 w-5" />
+      <WhatsApp className="h-5 w-5 fill-current" />
       Checkout on WhatsApp
     </Button>
   );

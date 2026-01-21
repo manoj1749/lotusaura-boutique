@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { MessageCircle, ShoppingCart } from "lucide-react";
+import { ShoppingCart } from "lucide-react";
+import { WhatsApp } from "@/components/icons/WhatsApp";
 import { ProductWithTag } from "@/types/product";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/hooks/useCart";
@@ -78,7 +79,7 @@ export function ProductCard({
             className="w-full bg-green-600 hover:bg-green-700 text-white gap-2"
             onClick={handleWhatsApp}
           >
-            <MessageCircle className="h-4 w-4" />
+            <WhatsApp className="h-4 w-4 fill-current" />
             Enquire on WhatsApp
           </Button>
         ))}

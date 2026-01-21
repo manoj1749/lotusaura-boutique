@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 import { WHATSAPP_NUMBER } from "@/lib/whatsapp";
 
@@ -46,6 +47,26 @@ export function Hero({ whatsappNumber = WHATSAPP_NUMBER }: HeroProps) {
               DM to design your perfect look
             </a>
           </div>
+        </div>
+      </div>
+      
+      {/* Hero Image */}
+      {/* Hero Image */}
+      {/* Hero Image */}
+      <div className="absolute inset-0 z-0 pointer-events-none flex items-end justify-center">
+        <div className="relative w-full h-[90%] md:w-[70%] md:h-full">
+          <Image
+            src="/hero-saree-woman-white-bg.png"
+            alt="Graceful woman in traditional silk saree"
+            fill
+            className="object-contain object-bottom mix-blend-multiply opacity-90"
+            priority
+            style={{
+              maskImage: 'linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%)',
+              WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%)'
+            }}
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 80vw, 70vw"
+          />
         </div>
       </div>
     </header>

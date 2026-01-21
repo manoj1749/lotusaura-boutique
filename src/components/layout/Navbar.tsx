@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { MessageCircle, Menu } from "lucide-react";
+import { Menu } from "lucide-react";
+import { WhatsApp } from "@/components/icons/WhatsApp";
 import { ModeToggle } from "@/components/mode-toggle";
 
 
@@ -49,7 +50,7 @@ export function Navbar({ whatsappNumber = WHATSAPP_NUMBER }: NavbarProps) {
                       target="_blank"
                       rel="noreferrer"
                     >
-                      <MessageCircle className="h-5 w-5" />
+                      <WhatsApp className="h-5 w-5 fill-current" />
                       Chat on WhatsApp
                     </a>
                  </nav>
@@ -112,7 +113,7 @@ export function Navbar({ whatsappNumber = WHATSAPP_NUMBER }: NavbarProps) {
               target="_blank"
               rel="noreferrer"
             >
-              <span className="text-lg"><MessageCircle className="h-5 w-5" /></span>
+              <span className="text-lg"><WhatsApp className="h-5 w-5 fill-current" /></span>
               <span className="text-xs font-bold uppercase tracking-wide">
                 Chat
               </span>
