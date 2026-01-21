@@ -1,10 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { Flower2, MessageCircle } from "lucide-react";
+import Image from "next/image";
+import { MessageCircle, Menu } from "lucide-react";
 import { ModeToggle } from "@/components/mode-toggle";
+
+
 import { CartButton } from "@/components/cart/CartButton";
 import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 import { WHATSAPP_NUMBER } from "@/lib/whatsapp";
 
@@ -17,10 +21,51 @@ export function Navbar({ whatsappNumber = WHATSAPP_NUMBER }: NavbarProps) {
     <nav className="sticky top-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border shadow-sm transition-colors duration-300">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 py-4">
         <div className="flex items-center justify-between">
+          
+          {/* Mobile Menu & Brand (Grouped for alignment on mobile) */}
+          <div className="flex items-center gap-4 md:hidden">
+             <Sheet>
+               <SheetTrigger asChild>
+                 <Button variant="ghost" size="icon" className="-ml-2">
+                   <Menu className="h-6 w-6" />
+                   <span className="sr-only">Open menu</span>
+                 </Button>
+               </SheetTrigger>
+               <SheetContent side="left" className="w-[300px] sm:w-[400px]">
+                 <nav className="flex flex-col gap-6 mt-10">
+                    <Link href="/" className="text-lg font-medium hover:text-primary transition-colors">
+                      Home
+                    </Link>
+                    <Link href="/collections" className="text-lg font-medium hover:text-primary transition-colors">
+                      Collections
+                    </Link>
+                    <Link href="/#about" className="text-lg font-medium hover:text-primary transition-colors">
+                      About Us
+                    </Link>
+                    <div className="h-px bg-border my-2" />
+                    <a
+                      className="flex items-center gap-2 text-green-600 font-medium"
+                      href={`https://wa.me/${whatsappNumber}`}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      <MessageCircle className="h-5 w-5" />
+                      Chat on WhatsApp
+                    </a>
+                 </nav>
+               </SheetContent>
+             </Sheet>
+          </div>
+
           {/* Brand */}
-          <Link href="/" className="flex items-center gap-3 group">
-            <div className="h-10 w-10 rounded-full border border-primary/50 bg-gradient-to-br from-secondary/60 to-background dark:to-background shadow-inner flex items-center justify-center group-hover:shadow-md transition-all">
-              <Flower2 className="h-5 w-5 text-primary" />
+          <Link href="/" className="flex items-center gap-3 group mr-auto md:mr-0">
+            <div className="relative h-10 w-10 flex-shrink-0">
+               <Image 
+                 src="/lotusaura.png" 
+                 alt="Lotus Aura" 
+                 fill
+                 className="rounded-full object-cover border border-primary/20 shadow-sm"
+               />
             </div>
 
             <div>
@@ -33,7 +78,7 @@ export function Navbar({ whatsappNumber = WHATSAPP_NUMBER }: NavbarProps) {
             </div>
           </Link>
 
-          {/* Links */}
+          {/* Desktop Links */}
           <div className="hidden md:flex items-center gap-8">
             <Link 
               className="text-sm uppercase tracking-widest font-semibold hover:text-primary transition-colors" 

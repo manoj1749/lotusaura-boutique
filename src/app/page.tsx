@@ -6,12 +6,22 @@ import { FeatureStrip } from "@/components/home/FeatureStrip";
 import { AboutSection } from "@/components/home/AboutSection";
 import { ProductGrid } from "@/components/products/ProductGrid";
 import Link from "next/link";
-import { PRODUCTS } from "@/lib/data";
+import { db } from "@/db/client";
+import { products } from "@/db/schema";
+import { desc, eq } from "drizzle-orm";
 
-// Featured products are the first 3
-const FEATURED_PRODUCTS = PRODUCTS.slice(0, 3);
+export default async function HomePage() {
+  // Fetch latest 3 published products
+  const latestProducts = await db.select().from(products)
+    .where(eq(products.published, true))
+    .orderBy(desc(products.id))
+    .limit(3);
 
-export default function HomePage() {
+  // Map to match the expected type if necessary (handling nulls)
+  const featuredProducts = latestProducts.map(p => ({
+    ...p,
+    tagColor: p.tagColor || undefined,
+  }));
   return (
     <main className="bg-background text-foreground transition-colors duration-300">
       <AnnouncementBar />
@@ -32,7 +42,7 @@ export default function HomePage() {
             <div className="h-1 w-24 bg-primary mx-auto rounded-full" />
           </div>
 
-          <ProductGrid products={FEATURED_PRODUCTS} showAddToCart={false} />
+          <ProductGrid products={featuredProducts as any} showAddToCart={false} />
 
           <div className="mt-10 text-center">
             <Link

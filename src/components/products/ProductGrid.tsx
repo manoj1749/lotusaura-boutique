@@ -4,9 +4,10 @@ import { ProductCard } from "./ProductCard";
 interface ProductGridProps {
   products: ProductWithTag[];
   showAddToCart?: boolean;
+  hideActionButtons?: boolean;
 }
 
-export function ProductGrid({ products, showAddToCart = false }: ProductGridProps) {
+export function ProductGrid({ products, showAddToCart = false, hideActionButtons = false }: ProductGridProps) {
   if (products.length === 0) {
     return (
       <div className="text-center py-20">
@@ -22,6 +23,7 @@ export function ProductGrid({ products, showAddToCart = false }: ProductGridProp
           key={product.id} 
           product={product} 
           showAddToCart={showAddToCart} 
+          hideActionButtons={hideActionButtons}
         />
       ))}
     </div>

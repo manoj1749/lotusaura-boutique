@@ -13,28 +13,65 @@ import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/s
 import { Button } from "@/components/ui/button";
 import { Filter } from "lucide-react";
 import { useEffect } from "react";
+import { PaginationControl } from "@/components/ui/PaginationControl"; // Import added
 
 // Get unique categories
 
 function CollectionsContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [products, setProducts] = useState<any[]>([]);
-  const categories = useMemo(
-    () => Array.from(new Set(products.map((p) => p.category).filter(Boolean))) as string[],
-    [products]
-  );
+  
+  // URL params for pagination
+  const pageParam = searchParams.get("page");
+  const currentPage = Number(pageParam ?? "1");
 
+  const [products, setProducts] = useState<any[]>([]);
+  const [totalPages, setTotalPages] = useState(1);
   const [loadingProducts, setLoadingProducts] = useState(true);
   
-  // State for client-side filtering (URL matching would be ideal for shareability)
-  // For simplicity MVP, using state + initial check from URL
+  // Filtering & Sorting State
   const selectedCategoryParam = searchParams.get('category');
   const [selectedCategories, setSelectedCategories] = useState<string[]>(
     selectedCategoryParam ? [selectedCategoryParam] : []
   );
   const [sortBy, setSortBy] = useState<SortOption>('newest');
 
+  // Fetch data when page changes
+  useEffect(() => {
+    (async () => {
+      try {
+        setLoadingProducts(true);
+        const params = new URLSearchParams();
+        params.set("page", currentPage.toString());
+        // Note: Currently API doesn't support category filtering, so this will only filter the *current page* of results client-side.
+        // TODO: Update API to support server-side filtering.
+        
+        const res = await fetch(`/api/admin/products?${params.toString()}`, { cache: "no-store" });
+        const data = await res.json();
+        
+        // Handle both API response formats (paginated vs non-paginated if we revert API)
+        if (data.products) {
+            setProducts(data.products);
+            setTotalPages(data.totalPages ?? 1);
+        } else {
+            setProducts([]);
+        }
+      } catch (e) {
+          console.error("Failed to fetch products", e);
+      } finally {
+        setLoadingProducts(false);
+      }
+    })();
+  }, [currentPage]);
+
+  // Derived unique categories (ideally this should come from a separate API to show ALL categories)
+  const categories = useMemo(
+    () => Array.from(new Set(products.map((p) => p.category).filter(Boolean))) as string[],
+    [products]
+  );
+
+  // Client-side filtering/sorting of the *fetched* page
+  // (This is a temporary limitation until backend filtering is implemented)
   const filteredProducts = useMemo(() => {
     let result = [...products];
 
@@ -56,7 +93,6 @@ function CollectionsContent() {
         result.sort((a, b) => b.name.localeCompare(a.name));
         break;
       case 'newest':
-        // Assuming createdAt is ISO strings
         result.sort((a, b) => {
             const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
             const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
@@ -78,40 +114,14 @@ function CollectionsContent() {
   const clearFilters = () => {
     setSelectedCategories([]);
     setSortBy('newest');
-    router.push('/collections'); // Clear URL params
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete('category');
+    router.push(`/collections?${params.toString()}`);
   };
-
-  useEffect(() => {
-    (async () => {
-      try {
-        setLoadingProducts(true);
-        const res = await fetch("/api/admin/products", { cache: "no-store" });
-        const data = await res.json();
-        setProducts(data.products ?? []);
-      } finally {
-        setLoadingProducts(false);
-      }
-    })();
-  }, []);
 
   const hasFilters = selectedCategories.length > 0;
   const isCatalogEmpty = !loadingProducts && products.length === 0;
-  const isFilteredEmpty =
-    !loadingProducts && products.length > 0 && filteredProducts.length === 0 && hasFilters;
-
-  const PAGE_SIZE = 9; // change to 6/12 if you want
-  const [page, setPage] = useState(1);
-  const totalPages = Math.max(1, Math.ceil(filteredProducts.length / PAGE_SIZE));
-  const paginatedProducts = useMemo(() => {
-    const start = (page - 1) * PAGE_SIZE;
-    return filteredProducts.slice(start, start + PAGE_SIZE);
-  }, [filteredProducts, page]);
-  const startIndex = filteredProducts.length === 0 ? 0 : (page - 1) * PAGE_SIZE + 1;
-  const endIndex = Math.min(page * PAGE_SIZE, filteredProducts.length);
-
-  useEffect(() => {
-    setPage(1);
-  }, [selectedCategories, sortBy]);
+  const isFilteredEmpty = !loadingProducts && products.length > 0 && filteredProducts.length === 0 && hasFilters;
 
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 py-12">
@@ -137,7 +147,6 @@ function CollectionsContent() {
 
         {/* Controls */}
         <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          {/* Left: Filters button */}
           <div className="flex items-center gap-2">
             <Sheet>
               <SheetTrigger asChild>
@@ -146,24 +155,14 @@ function CollectionsContent() {
                   Filters
                 </Button>
               </SheetTrigger>
-              <SheetContent
-                side="left"
-                className="w-[85vw] max-w-sm px-6 py-6"
-              >
+              <SheetContent side="left" className="w-[85vw] max-w-sm px-6 py-6">
                 <SheetTitle className="sr-only">Filters</SheetTitle>
-                {/* Header */}
                 <div className="flex items-center justify-between mb-6">
                   <h2 className="font-display text-xl font-semibold">Filters</h2>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={clearFilters}
-                    className="text-muted-foreground"
-                  >
+                  <Button variant="ghost" size="sm" onClick={clearFilters} className="text-muted-foreground">
                     Reset
                   </Button>
                 </div>
-
                 <div className="space-y-8">
                   <ProductFilters
                     showHeader={false}
@@ -177,7 +176,6 @@ function CollectionsContent() {
             </Sheet>
           </div>
 
-          {/* Right: Sort */}
           <div className="w-full sm:w-[260px]">
             <ProductSort value={sortBy} onValueChange={setSortBy} />
           </div>
@@ -201,39 +199,17 @@ function CollectionsContent() {
             </div>
           ) : (
             <>
-            <div className="mb-4 text-sm text-muted-foreground">
-              Showing {startIndex}-{endIndex} of {filteredProducts.length} products
-            </div>
-            <ProductGrid products={paginatedProducts} showAddToCart={true} />
-
-            {/* Pagination Controls */}
-            {totalPages > 1 && (
-              <div className="mt-10 flex items-center justify-between">
-                <p className="text-sm text-muted-foreground">
-                  Page {page} of {totalPages}
-                </p>
-
-                <div className="flex gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setPage((p) => Math.max(1, p - 1))}
-                    disabled={page === 1}
-                  >
-                    Previous
-                  </Button>
-
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                    disabled={page === totalPages}
-                  >
-                    Next
-                  </Button>
-                </div>
-              </div>
-            )}
+             <div className="mb-4 text-sm text-muted-foreground">
+               Showing {filteredProducts.length} results on this page
+             </div>
+             <ProductGrid products={filteredProducts} showAddToCart={true} />
+ 
+             <PaginationControl 
+                totalPages={totalPages} 
+                hasNextPage={currentPage < totalPages} 
+                hasPrevPage={currentPage > 1}
+                totalSize={0}
+             />
             </>
           )}
         </div>

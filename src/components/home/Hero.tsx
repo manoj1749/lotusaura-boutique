@@ -26,13 +26,13 @@ export function Hero({ whatsappNumber = WHATSAPP_NUMBER }: HeroProps) {
           </span>
 
           <h1 className="font-display text-5xl md:text-7xl leading-tight">
-            Timeless <span className="italic text-primary">Elegance</span>,<br />
-            Woven in Tradition.
+            Where <span className="italic text-primary">Lotus Aura</span>,<br />
+            Becomes Fashion.
           </h1>
 
           <p className="text-base md:text-lg text-muted-foreground max-w-md border-l-4 border-primary pl-4">
-            Discover our exclusive range of handpicked sarees and ethnic wear,
-            crafted to perfection for the modern woman.
+            Unique. Modern. Classy designs.
+            Crafted for Her.
           </p>
 
           <div className="pt-2 flex flex-wrap gap-3">
@@ -48,7 +48,7 @@ export function Hero({ whatsappNumber = WHATSAPP_NUMBER }: HeroProps) {
               rel="noreferrer"
               className="bg-secondary/80 dark:bg-secondary/70 border border-white/60 dark:border-white/10 text-foreground hover:bg-secondary dark:hover:bg-secondary px-8 py-3 rounded-sm uppercase tracking-widest text-xs font-bold backdrop-blur-sm transition"
             >
-              Enquire Now
+              DM to design your perfect look
             </a>
           </div>
         </div>

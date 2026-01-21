@@ -8,7 +8,9 @@ export function Footer() {
         <div className="md:col-span-1">
           <div className="font-display text-2xl font-bold">Lotus Aura</div>
           <p className="mt-3 text-sm text-neutral-400">
-            Bringing the essence of traditional weaving to the contemporary wardrobe. Crafted for her, with love.
+            Bringing the essence of traditional weaving to the contemporary wardrobe.
+            <br />
+            <span className="font-medium text-neutral-300">Label_by_Lotusaura</span>
           </p>
         </div>
 

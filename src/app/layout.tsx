@@ -17,6 +17,28 @@ const lato = Lato({
   variable: "--font-body",
 });
 
+export const metadata = {
+  title: "Lotus Aura | Crafted for Her",
+  description: "Unique. Modern. Classy designs. Where Lotus Aura Becomes Fashion. Label_by_Lotusaura.",
+  icons: {
+    icon: [
+      { url: "/lotusaura.png" },
+      { url: "/lotusaura.png", sizes: "32x32" },
+      { url: "/lotusaura.png", sizes: "192x192" },
+    ],
+    shortcut: "/lotusaura.png",
+    apple: [
+      { url: "/lotusaura.png" },
+      { url: "/lotusaura.png", sizes: "180x180", type: "image/png" },
+    ],
+  },
+  appleWebApp: {
+    title: "Lotus Aura",
+    statusBarStyle: "default",
+    capable: true,
+  },
+};
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html
