@@ -32,7 +32,7 @@ export function Navbar({ whatsappNumber = WHATSAPP_NUMBER }: NavbarProps) {
                    <span className="sr-only">Open menu</span>
                  </Button>
                </SheetTrigger>
-               <SheetContent side="left" className="w-[300px] sm:w-[400px]">
+               <SheetContent side="left" className="w-full max-w-none p-6 pt-10">
                  <nav className="flex flex-col gap-6 mt-10">
                     <Link href="/" className="text-lg font-medium hover:text-primary transition-colors">
                       Home
