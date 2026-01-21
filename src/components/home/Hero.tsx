@@ -9,14 +9,9 @@ interface HeroProps {
 export function Hero({ whatsappNumber = WHATSAPP_NUMBER }: HeroProps) {
   return (
     <header className="relative w-full h-[600px] md:h-[750px] overflow-hidden">
-      <div className="absolute inset-0">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="https://lh3.googleusercontent.com/aida-public/AB6AXuDipmNDa3KcKVBXPqEM-hy4fv2-uStLeOXoqyxcWhRaIgd3zy96u9MWtP-YblHswkY_vWGB6cCCeIiahMIkMHrgTMlvJhkhy34IvdyPQVgkJcSDsitgohjfml6rAWPSHuzfybN9V-jDm0YGNZdEOHASpD0bA6pzKJZWo-304MEPD8RnbX6YOgxZcJ7Ca4PJRzk5TWwzpsvPlj8WFYrkZaaogkOsuaZTBNX7ltPaSoX1ZOzcfJdlQ9Jrk4wkaCjdovoYWrrUOrEVQFA"
-          alt="Elegant Saree Draped on Model"
-          className="w-full h-full object-cover object-top opacity-90 dark:opacity-60"
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-background/80 dark:from-background/70 via-transparent to-transparent" />
+      <div className="absolute inset-0 bg-[#FFF0F5] dark:bg-background">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-rose-200/40 via-transparent to-transparent dark:from-rose-900/20" />
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,_var(--tw-gradient-stops))] from-rose-50 via-rose-50/80 to-transparent dark:from-background dark:via-background/80" />
       </div>
 
       <div className="relative z-10 container mx-auto px-6 h-full flex items-center">

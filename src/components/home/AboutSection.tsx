@@ -1,21 +1,17 @@
+import Image from "next/image";
+
 export function AboutSection() {
   return (
     <section id="about" className="py-20 bg-background">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
         <div className="rounded-2xl bg-gradient-to-br from-[#D4AF37]/80 to-[#E8D3D9]/40 p-4">
-          <div className="rounded-xl overflow-hidden bg-card text-card-foreground shadow">
-            {/* Ideally replace with an actual image */}
-            <div className="h-[320px] md:h-[380px] flex items-center justify-center bg-secondary/10">
-              <div className="text-center px-6">
-                <div className="text-primary text-xs font-bold uppercase tracking-widest mb-2">
-                  Visual Placeholder
-                </div>
-                <div className="font-display text-3xl">Lookbook / Brand Image</div>
-                <div className="mt-2 text-sm text-muted-foreground">
-                  Capturing the essence of elegance.
-                </div>
-              </div>
-            </div>
+          <div className="rounded-xl overflow-hidden bg-card text-card-foreground shadow relative h-[320px] md:h-[380px]">
+            <Image
+              src="/LotusAuraBranding.jpeg"
+              alt="Lotus Aura Branding"
+              fill
+              className="object-cover hover:scale-105 transition-transform duration-700"
+            />
           </div>
         </div>
 
