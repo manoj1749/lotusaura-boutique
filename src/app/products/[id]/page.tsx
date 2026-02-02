@@ -11,6 +11,7 @@ import { Heart, ChevronRight } from "lucide-react";
 import { formatPrice } from "@/lib/cart-utils";
 import { ProductGrid } from "@/components/products/ProductGrid";
 import { ProductGallery } from "@/components/products/ProductGallery";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Metadata } from "next";
 
 interface PageProps {
@@ -197,10 +198,18 @@ export default async function ProductPage({ params }: PageProps) {
                     </div>
                   )}
 
+                  {/* Description Accordion */}
                   {productData.description && (
-                     <div className="mb-8 text-sm leading-relaxed text-muted-foreground">
-                       {productData.description}
-                     </div>
+                    <Accordion type="single" collapsible defaultValue="description" className="mb-8">
+                      <AccordionItem value="description">
+                        <AccordionTrigger className="text-sm font-medium">
+                          Product Description
+                        </AccordionTrigger>
+                        <AccordionContent className="text-sm leading-relaxed text-muted-foreground">
+                          {productData.description}
+                        </AccordionContent>
+                      </AccordionItem>
+                    </Accordion>
                   )}
                 </div>
 
@@ -241,7 +250,7 @@ export default async function ProductPage({ params }: PageProps) {
                <h2 className="font-dancing text-3xl px-6 bg-background text-primary">You May Also Love</h2>
             </div>
             
-            <ProductGrid products={relatedProducts as any} showAddToCart={false} hideActionButtons={true} />
+            <ProductGrid products={relatedProducts as any} hideActionButtons={true} />
           </div>
           
         </div>

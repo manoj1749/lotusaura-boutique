@@ -202,7 +202,7 @@ function CollectionsContent() {
              <div className="mb-4 text-sm text-muted-foreground">
                Showing {filteredProducts.length} results on this page
              </div>
-             <ProductGrid products={filteredProducts} showAddToCart={true} />
+             <ProductGrid products={filteredProducts} />
  
              <PaginationControl 
                 totalPages={totalPages} 

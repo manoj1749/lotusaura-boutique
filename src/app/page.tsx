@@ -2,6 +2,7 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { AnnouncementBar } from "@/components/layout/AnnouncementBar";
 import { Hero } from "@/components/home/Hero";
+import { CategoryNav } from "@/components/home/CategoryNav";
 import { FeatureStrip } from "@/components/home/FeatureStrip";
 import { AboutSection } from "@/components/home/AboutSection";
 import { ProductGrid } from "@/components/products/ProductGrid";
@@ -27,7 +28,9 @@ export default async function HomePage() {
       <AnnouncementBar />
       <Navbar />
       <Hero />
-      <FeatureStrip />
+      
+      {/* Category Navigation - Mobile Optimized */}
+      <CategoryNav />
 
       {/* Featured collections */}
       <section id="collections" className="py-20 bg-muted/20">
@@ -42,7 +45,7 @@ export default async function HomePage() {
             <div className="h-1 w-24 bg-primary mx-auto rounded-full" />
           </div>
 
-          <ProductGrid products={featuredProducts as any} showAddToCart={false} />
+          <ProductGrid products={featuredProducts as any} />
 
           <div className="mt-10 text-center">
             <Link
@@ -55,8 +58,12 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* Feature Strip - Moved Below Collections */}
+      <FeatureStrip />
+
       <AboutSection />
       <Footer />
     </main>
   );
 }
+
