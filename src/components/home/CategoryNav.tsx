@@ -52,6 +52,7 @@ export function CategoryNav() {
             <Link
               key={category.slug}
               href={`/collections?category=${encodeURIComponent(category.name)}`}
+              prefetch={false}
               className="flex flex-col items-center gap-2 group"
             >
               {/* Circular Image */}

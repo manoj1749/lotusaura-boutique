@@ -7,21 +7,25 @@ export const runtime = "nodejs";
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
+
   const search = (searchParams.get("search") ?? "").trim();
   const page = Math.max(1, parseInt(searchParams.get("page") ?? "1", 10));
   const limit = 10;
   const offset = (page - 1) * limit;
 
-  // NOTE: SQLite "contains" search is typically done via LIKE.
-  // We'll do a simple LIKE on name/category/tags.
-  const like = `%${search.replaceAll("%", "\\%").replaceAll("_", "\\_")}%`;
+  // Escape LIKE wildcards to prevent unintended matches
+  const escaped = search.replaceAll("\\", "\\\\").replaceAll("%", "\\%").replaceAll("_", "\\_");
+  const like = `%${escaped}%`;
 
+  // Build a WHERE clause: if no search, match all
   const whereClause =
     search.length > 0
-      ? sql`${products.name} LIKE ${like} OR ${products.category} LIKE ${like} OR ${products.tags} LIKE ${like}`
+      ? sql`(${products.name} LIKE ${like} ESCAPE '\\'
+            OR ${products.category} LIKE ${like} ESCAPE '\\'
+            OR ${products.tags} LIKE ${like} ESCAPE '\\')`
       : sql`1=1`;
 
-  // ✅ total count (fast if indexed later)
+  // ✅ total count (DB-side)
   const totalRow = await db
     .select({ count: sql<number>`count(*)` })
     .from(products)
@@ -31,7 +35,7 @@ export async function GET(req: Request) {
   const totalCount = totalRow?.count ?? 0;
   const totalPages = Math.max(1, Math.ceil(totalCount / limit));
 
-  // ✅ paginated rows (only the page!)
+  // ✅ fetch only current page (DB-side)
   const paginatedRows = await db
     .select()
     .from(products)
@@ -41,10 +45,15 @@ export async function GET(req: Request) {
     .offset(offset);
 
   return NextResponse.json(
-    { products: paginatedRows, totalPages, currentPage: page, totalCount },
+    {
+      products: paginatedRows,
+      totalPages,
+      currentPage: page,
+      totalCount,
+    },
     {
       headers: {
-        // ✅ allow Vercel CDN to cache for a short time
+        // ✅ Vercel edge caching for GET responses
         "Cache-Control": "public, s-maxage=30, stale-while-revalidate=300",
       },
     }

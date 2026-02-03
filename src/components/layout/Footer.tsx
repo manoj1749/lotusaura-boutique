@@ -19,10 +19,10 @@ export function Footer() {
             Shop
           </div>
           <ul className="mt-4 space-y-2 text-sm text-neutral-300">
-            <li><Link href="/collections?sort=newest" className="hover:text-primary transition">New Arrivals</Link></li>
-            <li><Link href="/collections?category=Sarees" className="hover:text-primary transition">Sarees</Link></li>
-            <li><Link href="/collections?category=Lehengas" className="hover:text-primary transition">Lehengas</Link></li>
-            <li><Link href="/collections?category=Suits" className="hover:text-primary transition">Suit Sets</Link></li>
+            <li><Link href="/collections?sort=newest" prefetch={false} className="hover:text-primary transition">New Arrivals</Link></li>
+            <li><Link href="/collections?category=Sarees" prefetch={false} className="hover:text-primary transition">Sarees</Link></li>
+            <li><Link href="/collections?category=Lehengas" prefetch={false} className="hover:text-primary transition">Lehengas</Link></li>
+            <li><Link href="/collections?category=Suits" prefetch={false} className="hover:text-primary transition">Suit Sets</Link></li>
           </ul>
         </div>
 
