@@ -9,7 +9,10 @@ CREATE TABLE `products` (
 	`timestamp` text DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE INDEX IF NOT EXISTS idx_products_published ON products(published);
+-- Products table indexes
+CREATE INDEX IF NOT EXISTS idx_products_id ON products(id);
 CREATE INDEX IF NOT EXISTS idx_products_category ON products(category);
-CREATE INDEX IF NOT EXISTS idx_products_published_id ON products(published, id);
+CREATE INDEX IF NOT EXISTS idx_products_timestamp ON products(timestamp);
+
+-- Product images table (ONLY if this table exists)
 CREATE INDEX IF NOT EXISTS idx_product_images_pid ON product_images(product_id);
