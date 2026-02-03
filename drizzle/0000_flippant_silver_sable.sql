@@ -8,3 +8,8 @@ CREATE TABLE `products` (
 	`category` text,
 	`timestamp` text DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE INDEX IF NOT EXISTS idx_products_published ON products(published);
+CREATE INDEX IF NOT EXISTS idx_products_category ON products(category);
+CREATE INDEX IF NOT EXISTS idx_products_published_id ON products(published, id);
+CREATE INDEX IF NOT EXISTS idx_product_images_pid ON product_images(product_id);

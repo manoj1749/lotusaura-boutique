@@ -3,6 +3,7 @@ import { Footer } from "@/components/layout/Footer";
 import { AnnouncementBar } from "@/components/layout/AnnouncementBar";
 import { db } from "@/db/client";
 import { products, productImages } from "@/db/schema";
+import { getProductById, getProductImages } from "@/db/queries";
 import { eq, not, and, desc } from "drizzle-orm";
 import { notFound } from "next/navigation";
 import Link from "next/link";
@@ -18,13 +19,15 @@ interface PageProps {
   params: Promise<{ id: string }>;
 }
 
+export const revalidate = 60;
+
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { id } = await params;
   const productId = parseInt(id);
 
   if (isNaN(productId)) return { title: "Product Not Found" };
 
-  const product = await db.select().from(products).where(eq(products.id, productId)).get();
+  const product = await getProductById(productId);
 
   if (!product) return { title: "Product Not Found" };
 
@@ -48,7 +51,7 @@ export default async function ProductPage({ params }: PageProps) {
   }
 
   // 1. Fetch main product first (criticial dependency)
-  const productData = await db.select().from(products).where(eq(products.id, productId)).get();
+  const productData = await getProductById(productId);
 
   if (!productData) {
     notFound();
@@ -59,10 +62,7 @@ export default async function ProductPage({ params }: PageProps) {
   // - Candidates for "Related Products": fetch a pool of Latest, Category, and Filler items to deduplicate in memory
   const [imagesRecord, latestCandidates, categoryCandidates, fillerCandidates] = await Promise.all([
     // Images
-    db.select()
-      .from(productImages)
-      .where(eq(productImages.productId, productId))
-      .all(),
+    getProductImages(productId),
     
     // Latest Candidates (fetch 5)
     db.select().from(products)

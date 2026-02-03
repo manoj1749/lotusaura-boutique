@@ -1,49 +1,96 @@
 import { NextResponse } from "next/server";
 import { db } from "@/db/client";
 import { products, productImages } from "@/db/schema";
+import { desc, eq, sql } from "drizzle-orm";
 
 export const runtime = "nodejs";
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
-  const search = searchParams.get("search");
-  const page = parseInt(searchParams.get("page") ?? "1");
+  const search = (searchParams.get("search") ?? "").trim();
+  const page = Math.max(1, parseInt(searchParams.get("page") ?? "1", 10));
   const limit = 10;
   const offset = (page - 1) * limit;
 
-  // Optimally we would do this in DB:
-  // const rows = await db.select().from(products).where(...).limit(limit).offset(offset);
-  // BUT we also need total count for pagination.
-  // AND we have client-side-like search logic in comments.
+  // NOTE: SQLite "contains" search is typically done via LIKE.
+  // We'll do a simple LIKE on name/category/tags.
+  const like = `%${search.replaceAll("%", "\\%").replaceAll("_", "\\_")}%`;
 
-  // Let's implement basic DB pagination + total count:
-  
-  let allRows = await db.select().from(products);
-  
-  // Filter
-  if (search) {
-      const lower = search.toLowerCase();
-      allRows = allRows.filter(
-        (p) =>
-          p.name.toLowerCase().includes(lower) ||
-          (p.category && p.category.toLowerCase().includes(lower)) ||
-          (p.tags && p.tags.toLowerCase().includes(lower))
-      );
-  }
+  const whereClause =
+    search.length > 0
+      ? sql`${products.name} LIKE ${like} OR ${products.category} LIKE ${like} OR ${products.tags} LIKE ${like}`
+      : sql`1=1`;
 
-  const totalCount = allRows.length;
-  const totalPages = Math.ceil(totalCount / limit);
-  
-  // Slice for pagination (simulating DB offset/limit on filtered set)
-  const paginatedRows = allRows.slice(offset, offset + limit);
+  // ✅ total count (fast if indexed later)
+  const totalRow = await db
+    .select({ count: sql<number>`count(*)` })
+    .from(products)
+    .where(whereClause)
+    .get();
 
-  return NextResponse.json({ 
-      products: paginatedRows,
-      totalPages,
-      currentPage: page,
-      totalCount
-  });
+  const totalCount = totalRow?.count ?? 0;
+  const totalPages = Math.max(1, Math.ceil(totalCount / limit));
+
+  // ✅ paginated rows (only the page!)
+  const paginatedRows = await db
+    .select()
+    .from(products)
+    .where(whereClause)
+    .orderBy(desc(products.id))
+    .limit(limit)
+    .offset(offset);
+
+  return NextResponse.json(
+    { products: paginatedRows, totalPages, currentPage: page, totalCount },
+    {
+      headers: {
+        // ✅ allow Vercel CDN to cache for a short time
+        "Cache-Control": "public, s-maxage=30, stale-while-revalidate=300",
+      },
+    }
+  );
 }
+
+// export async function GET(req: Request) {
+//   const { searchParams } = new URL(req.url);
+//   const search = searchParams.get("search");
+//   const page = parseInt(searchParams.get("page") ?? "1");
+//   const limit = 10;
+//   const offset = (page - 1) * limit;
+
+//   // Optimally we would do this in DB:
+//   // const rows = await db.select().from(products).where(...).limit(limit).offset(offset);
+//   // BUT we also need total count for pagination.
+//   // AND we have client-side-like search logic in comments.
+
+//   // Let's implement basic DB pagination + total count:
+  
+//   let allRows = await db.select().from(products);
+  
+//   // Filter
+//   if (search) {
+//       const lower = search.toLowerCase();
+//       allRows = allRows.filter(
+//         (p) =>
+//           p.name.toLowerCase().includes(lower) ||
+//           (p.category && p.category.toLowerCase().includes(lower)) ||
+//           (p.tags && p.tags.toLowerCase().includes(lower))
+//       );
+//   }
+
+//   const totalCount = allRows.length;
+//   const totalPages = Math.ceil(totalCount / limit);
+  
+//   // Slice for pagination (simulating DB offset/limit on filtered set)
+//   const paginatedRows = allRows.slice(offset, offset + limit);
+
+//   return NextResponse.json({ 
+//       products: paginatedRows,
+//       totalPages,
+//       currentPage: page,
+//       totalCount
+//   });
+// }
 
 export async function POST(req: Request) {
   try {
