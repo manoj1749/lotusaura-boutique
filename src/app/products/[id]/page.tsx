@@ -1,10 +1,7 @@
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { AnnouncementBar } from "@/components/layout/AnnouncementBar";
-import { db } from "@/db/client";
-import { products, productImages } from "@/db/schema";
-import { getProductById, getProductImages } from "@/db/queries";
-import { eq, not, and, desc } from "drizzle-orm";
+import { getProductById, getProductImages, getRelatedPool } from "@/db/queries";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { AddToCartButton } from "@/components/products/AddToCartButton";
@@ -13,7 +10,7 @@ import { formatPrice } from "@/lib/cart-utils";
 import { ProductGrid } from "@/components/products/ProductGrid";
 import { ProductGallery } from "@/components/products/ProductGallery";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Metadata } from "next";
+import type { Metadata } from "next";
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -23,7 +20,7 @@ export const revalidate = 60;
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { id } = await params;
-  const productId = parseInt(id);
+  const productId = parseInt(id, 10);
 
   if (isNaN(productId)) return { title: "Product Not Found" };
 
@@ -44,7 +41,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function ProductPage({ params }: PageProps) {
   const { id } = await params;
-  const productId = parseInt(id);
+  const productId = parseInt(id, 10);
 
   if (isNaN(productId)) {
     notFound();
@@ -60,66 +57,36 @@ export default async function ProductPage({ params }: PageProps) {
   // 2. Fetch all other data in parallel
   // - Images: for gallery
   // - Candidates for "Related Products": fetch a pool of Latest, Category, and Filler items to deduplicate in memory
-  const [imagesRecord, latestCandidates, categoryCandidates, fillerCandidates] = await Promise.all([
-    // Images
+  const [imagesRecord, relatedPool] = await Promise.all([
     getProductImages(productId),
-    
-    // Latest Candidates (fetch 5)
-    db.select().from(products)
-      .where(and(eq(products.published, true), not(eq(products.id, productId))))
-      .orderBy(desc(products.id))
-      .limit(5),
-
-    // Category Candidates (fetch 5)
-    productData.category 
-      ? db.select().from(products)
-          .where(and(
-            eq(products.published, true),
-            eq(products.category, productData.category),
-            not(eq(products.id, productId))
-          ))
-          .limit(5)
-      : Promise.resolve([]),
-
-    // Filler Candidates (fetch 8 to be safe)
-    db.select().from(products)
-      .where(and(eq(products.published, true), not(eq(products.id, productId))))
-      .limit(8)
+    getRelatedPool(productId),
   ]);
 
   // Construct images array for Gallery
   const galleryImages = [
     { id: 'main', url: productData.imageUrl, alt: productData.name },
-    ...imagesRecord.map(img => ({ id: img.id, url: img.imageUrl, alt: productData.name }))
+    ...imagesRecord.map(img => ({ id: String(img.id), url: img.imageUrl, alt: productData.name }))
   ];
 
-  // In-memory Deduplication Logic for Related Products
-  const relatedProductsMap = new Map();
-  const excludeIds = new Set([productId]);
+  // Pick 4 related items (prefer same category first)
+  const relatedProducts: any[] = [];
+  const used = new Set<number>([productId]);
 
-  const addProduct = (p: any) => {
-    if (relatedProductsMap.size >= 4) return;
-    if (!excludeIds.has(p.id)) {
-      relatedProductsMap.set(p.id, p);
-      excludeIds.add(p.id);
+  const tryAdd = (p: any) => {
+    if (relatedProducts.length >= 4) return;
+    if (!used.has(p.id)) {
+      relatedProducts.push({ ...p, tagColor: p.tagColor || undefined });
+      used.add(p.id);
     }
   };
 
-  // 1. Add Latest (Top 1 priority)
-  if (latestCandidates.length > 0) addProduct(latestCandidates[0]);
+  if (productData.category) {
+    relatedPool
+      .filter((p) => p.category === productData.category)
+      .forEach(tryAdd);
+  }
 
-  // 2. Add Category (Top 1 priority)
-  if (categoryCandidates.length > 0) addProduct(categoryCandidates[0]);
-
-  // 3. Fill remaining slots from Latest, then Category, then Filler
-  latestCandidates.forEach(addProduct);
-  categoryCandidates.forEach(addProduct);
-  fillerCandidates.forEach(addProduct);
-
-  const relatedProducts = Array.from(relatedProductsMap.values()).map(p => ({
-    ...p,
-    tagColor: p.tagColor || undefined,
-  }));
+  relatedPool.forEach(tryAdd);
 
   return (
     <main className="bg-background text-foreground min-h-screen flex flex-col">

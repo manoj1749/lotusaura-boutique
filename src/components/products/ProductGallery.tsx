@@ -39,7 +39,8 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
           alt={mainImage?.alt || productName}
           fill
           className="object-cover transition-transform duration-500 group-hover:scale-105"
-          priority
+          priority={selectedIndex === 0}
+          sizes="(max-width: 1024px) 100vw, 50vw"
         />
         
         {/* Wishlist Button Overlay */}
@@ -68,6 +69,7 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
                 fill
                 className="object-cover"
                 sizes="(max-width: 768px) 25vw, 150px"
+                loading="lazy"
               />
             </button>
           ))}

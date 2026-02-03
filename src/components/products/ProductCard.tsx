@@ -14,14 +14,14 @@ interface ProductCardProps {
   whatsappNumber?: string;
   hideActionButtons?: boolean;
   // Additional images for grid display (optional)
-  additionalImage?: string;
+  // additionalImage?: string;
 }
 
 export function ProductCard({ 
   product, 
   whatsappNumber = WHATSAPP_NUMBER,
   hideActionButtons = false,
-  additionalImage
+  // additionalImage
 }: ProductCardProps) {
   const handleWhatsApp = () => {
     const text = `Hi, I'm interested in ${product.name} priced at ${formatPrice(product.price)}. Is it available?`;
@@ -40,22 +40,28 @@ export function ProductCard({
       {/* 2-Image Grid Layout - Mobile First */}
       <div className="relative aspect-[3/4] overflow-hidden bg-muted">
         <Link href={`/products/${product.id}`} className="block w-full h-full">
-          <div className="grid grid-cols-2 gap-0.5 h-full">
+          {/* <div className="grid grid-cols-2 gap-0.5 h-full"> */}
             {/* Main Image - Left */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+            {/* <img
               src={product.imageUrl}
               alt={product.name}
               className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-            />
+            /> */}
             {/* Second Image - Right (or duplicate if no additional image) */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+            {/* <img
               src={additionalImage || product.imageUrl}
               alt={`${product.name} - view 2`}
               className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-            />
-          </div>
+            /> */}
+          {/* </div> */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={product.imageUrl}
+            alt={product.name}
+            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+          />
           <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition" />
         </Link>
         {product.tag ? (
