@@ -65,6 +65,7 @@ export default function AdminProductsPage() {
   const [loading, setLoading] = React.useState(true);
   const [open, setOpen] = React.useState(false); // Sheet open state
   const [search, setSearch] = React.useState("");
+  const [pendingIds, setPendingIds] = React.useState<Set<number>>(new Set());
 
   // Edit State
   const [editingId, setEditingId] = React.useState<number | null>(null);
@@ -115,18 +116,22 @@ export default function AdminProductsPage() {
     return list.sort();
   }, [items]);
 
-  const load = React.useCallback(async () => {
-    setLoading(true);
-    try {
-      const data = await fetchProducts(currentPage, search);
-      setItems(data.products);
-      setTotalPages(data.totalPages);
-    } catch (e: any) {
-      toast.error(e?.message ?? "Failed to load products");
-    } finally {
-      setLoading(false);
-    }
-  }, [search, currentPage]);
+  const load = React.useCallback(
+  async (opts?: { silent?: boolean }) => {
+      if (!opts?.silent) setLoading(true);
+
+      try {
+        const data = await fetchProducts(currentPage, search);
+        setItems(data.products);
+        setTotalPages(data.totalPages);
+      } catch (e: any) {
+        toast.error(e?.message ?? "Failed to load products");
+      } finally {
+        if (!opts?.silent) setLoading(false);
+      }
+    },
+    [search, currentPage]
+  );
 
   React.useEffect(() => {
     load();
@@ -138,6 +143,15 @@ export default function AdminProductsPage() {
     const data = await res.json();
     return data.product;
   }
+
+  function markPending(id: number, on: boolean) {
+  setPendingIds((prev) => {
+    const next = new Set(prev);
+    if (on) next.add(id);
+    else next.delete(id);
+    return next;
+  });
+}
 
   function resetForm() {
     setEditingId(null);
@@ -315,7 +329,7 @@ export default function AdminProductsPage() {
 
       toast.success(editingId ? "Product updated" : "Product added");
       setOpen(false);
-      await load();
+      await load({ silent: true });
     } catch (e: any) {
       toast.error(e?.message ?? "Something went wrong");
     } finally {
@@ -332,24 +346,58 @@ export default function AdminProductsPage() {
       setDeleteId(null);
       setEditingId(null);
       setOpen(false); // Close sheet if open
-      await load();
+      await load({ silent: true });
     } catch (e: any) {
       toast.error(e?.message ?? "Delete failed");
     }
   }
 
-  async function toggleStatus(p: Product, currentStatus: boolean) {
+  async function toggleStatus(p: Product) {
+  const nextPublished = !(p.published !== false);
+
+    // optimistic update: flip instantly
+    setItems((prev) =>
+      prev.map((x) => (x.id === p.id ? { ...x, published: nextPublished } : x))
+    );
+
+    markPending(p.id, true);
+
     try {
+      // IMPORTANT: your PUT requires name + price. Send minimal valid payload.
       const res = await fetch(`/api/admin/products/${p.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...p, published: !currentStatus }),
+        body: JSON.stringify({
+          name: p.name,
+          price: p.price,
+          published: nextPublished,
+
+          // keep existing values stable (prevents accidental nulling)
+          description: p.description ?? null,
+          category: p.category ?? null,
+          stock: p.stock ?? 0,
+          tags: p.tags ?? null,
+          dispatchTime: p.dispatchTime ?? null,
+          material: p.material ?? null,
+          washCare: p.washCare ?? null,
+          pattern: p.pattern ?? null,
+        }),
       });
+
       if (!res.ok) throw new Error("Update failed");
-      toast.success(currentStatus ? "Unpublished" : "Published");
-      await load();
-    } catch (error) {
-       toast.error("Failed to update status");
+
+      toast.success(nextPublished ? "Published" : "Unpublished");
+
+      // optional: refresh in background WITHOUT flashing loading
+      load({ silent: true });
+    } catch (e) {
+      // revert if failed
+      setItems((prev) =>
+        prev.map((x) => (x.id === p.id ? { ...x, published: !nextPublished } : x))
+      );
+      toast.error("Failed to update status");
+    } finally {
+      markPending(p.id, false);
     }
   }
 
@@ -417,9 +465,10 @@ export default function AdminProductsPage() {
                       <span className={p.stock > 0 ? "text-green-600" : "text-red-600"}>{p.stock}</span>
                     </TableCell>
                     <TableCell className="text-center hidden sm:table-cell">
-                      <Switch 
+                      <Switch
                         checked={p.published !== false}
-                        onCheckedChange={() => toggleStatus(p, p.published !== false)}
+                        disabled={pendingIds.has(p.id)}
+                        onCheckedChange={() => toggleStatus(p)}
                       />
                     </TableCell>
                     <TableCell className="text-right">

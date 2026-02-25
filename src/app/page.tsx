@@ -5,18 +5,17 @@ import { Hero } from "@/components/home/Hero";
 import { CategoryNav } from "@/components/home/CategoryNav";
 import { FeatureStrip } from "@/components/home/FeatureStrip";
 import { AboutSection } from "@/components/home/AboutSection";
-import { ProductGrid } from "@/components/products/ProductGrid";
-import Link from "next/link";
+import { FeaturedCollections } from "@/components/home/FeaturedCollections";
 import { db } from "@/db/client";
 import { products } from "@/db/schema";
 import { desc, and, eq, isNotNull, ne, sql } from "drizzle-orm";
 
 export default async function HomePage() {
-  // Fetch latest 3 published products
+  // Fetch latest 8 published products for featured section
   const latestProducts = await db.select().from(products)
     .where(eq(products.published, true))
     .orderBy(desc(products.id))
-    .limit(3);
+    .limit(8);
 
   // Map to match the expected type if necessary (handling nulls)
   const featuredProducts = latestProducts.map(p => ({
@@ -66,30 +65,7 @@ const categoriesForNav = categoriesFromDb
       <CategoryNav categories={categoriesForNav} />
 
       {/* Featured collections */}
-      <section id="collections" className="pt-12 pb-20 bg-muted/20">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <div className="text-center mb-14">
-            <div className="text-primary text-xs font-bold uppercase tracking-widest">
-              Our Selection
-            </div>
-            <h2 className="font-display text-4xl mt-2 mb-4">
-              Featured Collections
-            </h2>
-            <div className="h-1 w-24 bg-primary mx-auto rounded-full" />
-          </div>
-
-          <ProductGrid products={featuredProducts as any} />
-
-          <div className="mt-10 text-center">
-            <Link
-              href="/collections"
-              className="inline-flex items-center justify-center px-6 py-3 border border-primary text-primary uppercase tracking-widest text-xs font-bold hover:bg-primary hover:text-white transition"
-            >
-              View All Collections
-            </Link>
-          </div>
-        </div>
-      </section>
+      <FeaturedCollections products={featuredProducts as any} />
 
       {/* Feature Strip - Moved Below Collections */}
       <FeatureStrip />
