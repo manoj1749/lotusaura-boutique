@@ -9,14 +9,14 @@ interface HeroProps {
 
 export function Hero({ whatsappNumber = WHATSAPP_NUMBER }: HeroProps) {
   return (
-    <header className="relative w-full h-[600px] md:h-[750px] overflow-hidden">
+    <header className="relative w-full h-[520px] sm:h-[560px] md:h-[750px] overflow-hidden">
       <div className="absolute inset-0 bg-[#FFF0F5] dark:bg-background">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-rose-200/40 via-transparent to-transparent dark:from-rose-900/20" />
         <div className="absolute inset-0 bg-[linear-gradient(to_right,_var(--tw-gradient-stops))] from-rose-50 via-rose-50/80 to-transparent dark:from-background dark:via-background/80" />
       </div>
 
       <div className="relative z-10 container mx-auto px-6 h-full flex items-center">
-        <div className="max-w-xl space-y-6">
+        <div className="max-w-xl space-y-4 md:space-y-6">
           <span className="inline-block py-1 px-3 border border-primary text-primary uppercase text-[10px] tracking-[0.3em] bg-secondary/40 text-secondary-foreground backdrop-blur-md rounded-sm">
             New Arrivals
           </span>
@@ -54,7 +54,7 @@ export function Hero({ whatsappNumber = WHATSAPP_NUMBER }: HeroProps) {
       {/* Hero Image */}
       {/* Hero Image */}
       <div className="absolute inset-0 z-0 pointer-events-none flex items-end justify-center">
-        <div className="relative w-full h-[90%] md:w-[70%] md:h-full">
+        <div className="relative w-full h-[82%] md:w-[70%] md:h-full -translate-y-6 sm:-translate-y-3 md:translate-y-0">
           <Image
             src="/hero-saree-woman-white-bg.png"
             alt="Graceful woman in traditional silk saree"
