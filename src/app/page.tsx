@@ -11,11 +11,11 @@ import { products } from "@/db/schema";
 import { desc, and, eq, isNotNull, ne, sql } from "drizzle-orm";
 
 export default async function HomePage() {
-  // Fetch latest 8 published products for featured section
+  // Fetch latest 9 published products for featured section
   const latestProducts = await db.select().from(products)
     .where(eq(products.published, true))
     .orderBy(desc(products.id))
-    .limit(8);
+    .limit(9);
 
   // Map to match the expected type if necessary (handling nulls)
   const featuredProducts = latestProducts.map(p => ({
