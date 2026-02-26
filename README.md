@@ -30,3 +30,6 @@ npm run dev
 ---
 
 Copyright © 2026 Manoj Sadanala. All rights reserved.
+
+This repository contains proprietary source code.  
+Unauthorized copying, modification, distribution, or use is strictly prohibited.
