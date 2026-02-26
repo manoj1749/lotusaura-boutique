@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import { WhatsApp } from "@/components/icons/WhatsApp";
 
 import { WHATSAPP_NUMBER } from "@/lib/whatsapp";
 
@@ -44,7 +45,10 @@ export function Hero({ whatsappNumber = WHATSAPP_NUMBER }: HeroProps) {
               rel="noreferrer"
               className="bg-secondary/80 dark:bg-secondary/70 border border-white/60 dark:border-white/10 text-foreground hover:bg-secondary dark:hover:bg-secondary px-8 py-3 rounded-sm uppercase tracking-widest text-xs font-bold backdrop-blur-sm transition"
             >
-              DM to design your perfect look
+              <span className="inline-flex items-center gap-2">
+                <WhatsApp className="h-4 w-4" />
+                <span>DM to design your perfect look</span>
+              </span>
             </a>
           </div>
         </div>
