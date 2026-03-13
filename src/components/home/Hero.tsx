@@ -22,7 +22,7 @@ export function Hero({ whatsappNumber = WHATSAPP_NUMBER }: HeroProps) {
             New Arrivals
           </span>
 
-          <h1 className="font-display text-5xl md:text-7xl leading-tight">
+          <h1 className="hidden md:block font-display text-5xl md:text-7xl leading-tight">
             Where <span className="italic text-primary">Lotus Aura</span>,<br />
             Becomes Fashion.
           </h1>
@@ -53,9 +53,7 @@ export function Hero({ whatsappNumber = WHATSAPP_NUMBER }: HeroProps) {
           </div>
         </div>
       </div>
-      
-      {/* Hero Image */}
-      {/* Hero Image */}
+
       {/* Hero Image */}
       <div className="absolute inset-0 z-0 pointer-events-none flex items-end justify-center">
         <div className="relative w-full h-[82%] md:w-[70%] md:h-full -translate-y-6 sm:-translate-y-3 md:translate-y-0">
