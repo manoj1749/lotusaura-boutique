@@ -29,11 +29,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   if (!product) return { title: "Product Not Found" };
 
   return {
-    title: `${product.name} | Lotus Aura Boutique`,
-    description: product.description || `Buy ${product.name} at Lotus Aura Boutique.`,
+    title: `${product.name} | Harshini Designer Studio`,
+    description: product.description || `Buy ${product.name} at Harshini Designer Studio.`,
     openGraph: {
       title: product.name,
-      description: product.description || `Buy ${product.name} at Lotus Aura Boutique.`,
+      description: product.description || `Buy ${product.name} at Harshini Designer Studio.`,
       images: [product.imageUrl],
     },
   };

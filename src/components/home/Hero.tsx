@@ -4,16 +4,19 @@ import { WhatsApp } from "@/components/icons/WhatsApp";
 
 import { WHATSAPP_NUMBER } from "@/lib/whatsapp";
 
+
 interface HeroProps {
   whatsappNumber?: string;
+  heroImageUrl?: string;
 }
 
-export function Hero({ whatsappNumber = WHATSAPP_NUMBER }: HeroProps) {
+export function Hero({ whatsappNumber = WHATSAPP_NUMBER, heroImageUrl }: HeroProps) {
+
   return (
     <header className="relative w-full h-[520px] sm:h-[560px] md:h-[750px] overflow-hidden">
       <div className="absolute inset-0 bg-[#FFF0F5] dark:bg-background">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-rose-200/40 via-transparent to-transparent dark:from-rose-900/20" />
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,_var(--tw-gradient-stops))] from-rose-50 via-rose-50/80 to-transparent dark:from-background dark:via-background/80" />
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,_var(--tw-gradient-stops))] from-rose-50 from-[45%] via-rose-50/70 via-[60%] to-transparent dark:from-background dark:from-[45%] dark:via-background/70 dark:via-[60%]" />
       </div>
 
       <div className="relative z-10 container mx-auto px-6 h-full flex items-center">
@@ -23,11 +26,11 @@ export function Hero({ whatsappNumber = WHATSAPP_NUMBER }: HeroProps) {
           </span>
 
           <h1 className="hidden md:block font-display text-5xl md:text-7xl leading-tight">
-            Where <span className="italic text-primary">Lotus Aura</span>,<br />
+            Where <span className="italic text-primary">Aura</span>,<br />
             Becomes Fashion.
           </h1>
 
-          <p className="text-base md:text-lg text-muted-foreground max-w-md border-l-4 border-primary pl-4">
+          <p className="text-base md:text-lg text-foreground max-w-md border-l-4 border-primary pl-4">
             Unique. Modern. Classy designs.
             Crafted for Her.
           </p>
@@ -54,23 +57,23 @@ export function Hero({ whatsappNumber = WHATSAPP_NUMBER }: HeroProps) {
         </div>
       </div>
 
-      {/* Hero Image */}
-      <div className="absolute inset-0 z-0 pointer-events-none flex items-end justify-center">
-        <div className="relative w-full h-[82%] md:w-[70%] md:h-full -translate-y-6 sm:-translate-y-3 md:translate-y-0">
+      {/* Hero Image — only rendered when an image URL is saved in DB */}
+      {heroImageUrl && (
+        <div className="absolute inset-0 z-0 pointer-events-none">
           <Image
-            src="/hero-saree-woman-white-bg.png"
+            src={heroImageUrl}
             alt="Graceful woman in traditional silk saree"
             fill
-            className="object-contain object-bottom mix-blend-multiply opacity-90"
+            className="object-cover mix-blend-multiply opacity-90"
             priority
             style={{
-              maskImage: 'linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%)',
-              WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%)'
+              maskImage: 'linear-gradient(to right, transparent 0%, black 30%, black 100%)',
+              WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 30%, black 100%)'
             }}
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 80vw, 70vw"
+            sizes="100vw"
           />
         </div>
-      </div>
+      )}
     </header>
   );
 }

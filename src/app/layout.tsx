@@ -18,8 +18,8 @@ const lato = Lato({
 });
 
 export const metadata = {
-  title: "Lotus Aura | Crafted for Her",
-  description: "Unique. Modern. Classy designs. Where Lotus Aura Becomes Fashion. Label_by_Lotusaura.",
+  title: "Harshini Designer Studio | Crafted for Her",
+  description: "Unique. Modern. Classy designs. Where Harshini Designer Studio Becomes Fashion.",
   icons: {
     icon: [
       { url: "/lotusaura.png" },
@@ -33,7 +33,7 @@ export const metadata = {
     ],
   },
   appleWebApp: {
-    title: "Lotus Aura",
+    title: "Harshini Designer Studio",
     statusBarStyle: "default",
     capable: true,
   },

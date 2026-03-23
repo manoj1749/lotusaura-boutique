@@ -28,3 +28,9 @@ export const productImages = sqliteTable("product_images", {
   imagePath: text("image_path").notNull(),
   displayOrder: integer("display_order").default(0),
 });
+
+export const siteSettings = sqliteTable("site_settings", {
+  key: text("key").primaryKey(),
+  value: text("value").notNull(),
+  updatedAt: text("updated_at").default(sql`CURRENT_TIMESTAMP`),
+});

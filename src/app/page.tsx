@@ -7,10 +7,14 @@ import { FeatureStrip } from "@/components/home/FeatureStrip";
 import { AboutSection } from "@/components/home/AboutSection";
 import { FeaturedCollections } from "@/components/home/FeaturedCollections";
 import { db } from "@/db/client";
-import { products } from "@/db/schema";
+import { products, siteSettings } from "@/db/schema";
 import { desc, and, eq, isNotNull, ne, sql } from "drizzle-orm";
 
 export default async function HomePage() {
+  // Fetch hero image from site settings
+  const heroSetting = await db.select().from(siteSettings).where(eq(siteSettings.key, "heroImageUrl")).get();
+  const heroImageUrl = heroSetting?.value;
+
   // Fetch latest 9 published products for featured section
   const latestProducts = await db.select().from(products)
     .where(eq(products.published, true))
@@ -59,7 +63,7 @@ const categoriesForNav = categoriesFromDb
     <main className="bg-background text-foreground transition-colors duration-300">
       <AnnouncementBar />
       <Navbar />
-      <Hero />
+      <Hero heroImageUrl={heroImageUrl} />
       
       {/* Category Navigation - Mobile Optimized */}
       <CategoryNav categories={categoriesForNav} />

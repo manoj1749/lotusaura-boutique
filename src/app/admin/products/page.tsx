@@ -105,6 +105,55 @@ export default function AdminProductsPage() {
 
   const [submitting, setSubmitting] = React.useState(false);
 
+  // Site Settings State
+  const [heroImageUrl, setHeroImageUrl] = React.useState<string | null>(null);
+  const [heroFile, setHeroFile] = React.useState<File | null>(null);
+  const [heroPreview, setHeroPreview] = React.useState<string | null>(null);
+  const [savingHero, setSavingHero] = React.useState(false);
+  const [settingsOpen, setSettingsOpen] = React.useState(false);
+
+  // Load settings on mount
+  React.useEffect(() => {
+    fetch("/api/admin/settings")
+      .then(r => r.json())
+      .then(data => {
+        if (data.heroImageUrl) {
+          setHeroImageUrl(data.heroImageUrl);
+          setHeroPreview(data.heroImageUrl);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  async function saveHeroImage() {
+    if (!heroFile && !heroImageUrl) return;
+    setSavingHero(true);
+    try {
+      let url = heroImageUrl;
+      if (heroFile) {
+        const fd = new FormData();
+        fd.append("file", heroFile);
+        const up = await fetch("/api/admin/upload", { method: "POST", body: fd });
+        if (!up.ok) throw new Error("Upload failed");
+        const data = await up.json();
+        url = data.url;
+        setHeroImageUrl(url);
+      }
+      const res = await fetch("/api/admin/settings", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ key: "heroImageUrl", value: url }),
+      });
+      if (!res.ok) throw new Error("Save failed");
+      toast.success("Hero image updated!");
+      setHeroFile(null);
+    } catch (e: any) {
+      toast.error(e?.message ?? "Failed to save hero image");
+    } finally {
+      setSavingHero(false);
+    }
+  }
+
   // Derived unique categories
   const categories = React.useMemo(() => {
     // Note: With pagination, this only shows categories FROM THE CURRENT PAGE if we rely on `items`.
@@ -403,6 +452,55 @@ export default function AdminProductsPage() {
 
   return (
     <div className="mx-auto max-w-6xl p-6">
+
+      {/* ── Site Settings ── */}
+      <div className="mb-8 rounded-xl border bg-card shadow-sm overflow-hidden">
+        <button
+          className="w-full flex items-center justify-between px-6 py-4 text-left hover:bg-muted/20 transition-colors"
+          onClick={() => setSettingsOpen(v => !v)}
+        >
+          <div>
+            <div className="font-semibold text-base">Site Settings</div>
+            <div className="text-xs text-muted-foreground mt-0.5">Manage the homepage hero image</div>
+          </div>
+          <span className="text-muted-foreground text-xs">{settingsOpen ? "▲ Collapse" : "▼ Expand"}</span>
+        </button>
+
+        {settingsOpen && (
+          <div className="px-6 pb-6 border-t pt-5">
+            <div className="flex items-start gap-6">
+              <div className="relative w-32 aspect-video rounded-md overflow-hidden border bg-muted flex-shrink-0">
+                {heroPreview ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={heroPreview} alt="Hero preview" className="w-full h-full object-cover" />
+                ) : (
+                  <div className="flex items-center justify-center w-full h-full text-muted-foreground">
+                    <Upload className="h-5 w-5" />
+                  </div>
+                )}
+              </div>
+              <div className="flex-1 space-y-3">
+                <Label>Hero Image</Label>
+                <Input
+                  type="file"
+                  accept="image/*"
+                  onChange={e => {
+                    const f = e.target.files?.[0];
+                    if (f) {
+                      setHeroFile(f);
+                      setHeroPreview(URL.createObjectURL(f));
+                    }
+                  }}
+                />
+                <p className="text-xs text-muted-foreground">Replaces the homepage hero background image. Recommended: 1920×1080 or wider.</p>
+                <Button onClick={saveHeroImage} disabled={savingHero || (!heroFile && !!heroImageUrl)} size="sm">
+                  {savingHero ? "Saving..." : "Save Hero Image"}
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
       <div className="mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-display font-medium text-foreground">Products Dashboard</h1>

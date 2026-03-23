@@ -6,7 +6,7 @@ export function Footer() {
     <footer className="bg-foreground text-background">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 py-12 grid grid-cols-1 md:grid-cols-4 gap-10">
         <div className="md:col-span-1">
-          <div className="font-display text-2xl font-bold">Lotus Aura</div>
+          <div className="font-display text-2xl font-bold">Harshini Designer Studio</div>
 
           <p className="mt-3 text-sm text-background/70">
             Bringing the essence of traditional weaving to the contemporary wardrobe.
@@ -115,7 +115,7 @@ export function Footer() {
       </div>
 
       <div className="border-t border-background/15 py-6 text-center text-xs text-background/60">
-        © {new Date().getFullYear()} Lotus Aura. All rights reserved.
+        © {new Date().getFullYear()} Harshini Designer Studio. All rights reserved.
       </div>
     </footer>
   );

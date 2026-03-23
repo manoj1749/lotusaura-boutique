@@ -128,7 +128,7 @@ export function Navbar({ whatsappNumber = WHATSAPP_NUMBER }: NavbarProps) {
             <div className="relative h-10 w-10 flex-shrink-0">
                <Image 
                  src="/lotusaura.png" 
-                 alt="Lotus Aura" 
+                 alt="Harshini Designer Studio" 
                  fill
                  className="rounded-full object-cover border border-primary/20 shadow-sm"
                />
@@ -136,7 +136,7 @@ export function Navbar({ whatsappNumber = WHATSAPP_NUMBER }: NavbarProps) {
 
             <div>
               <div className="font-display text-xl sm:text-2xl font-bold tracking-wide">
-                Lotus Aura
+                Harshini Designer Studio
               </div>
               <div className="text-[10px] uppercase tracking-[0.2em] text-primary">
                 Crafted For Her

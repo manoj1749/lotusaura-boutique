@@ -6,7 +6,7 @@ export const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "91628
 export const generateWhatsAppMessage = (items: CartItem[], phoneNumber: string): string => {
   if (items.length === 0) return "";
 
-  const greeting = "Hello! I'd like to order the following items from Lotus Aura:\n\n";
+  const greeting = "Hello! I'd like to order the following items from Harshini Designer Studio:\n\n";
   
   const itemsList = items.map((item, index) => {
     const price = typeof item.product.price === 'string'

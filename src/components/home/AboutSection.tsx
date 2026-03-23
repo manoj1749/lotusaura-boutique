@@ -8,7 +8,7 @@ export function AboutSection() {
           <div className="rounded-xl overflow-hidden bg-card text-card-foreground shadow relative h-[220px] sm:h-[280px] md:h-[380px]">
             <Image
               src="/LotusAuraBranding.jpeg"
-              alt="Lotus Aura Branding"
+              alt="Harshini Designer Studio Branding"
               fill
               className="object-cover hover:scale-105 transition-transform duration-700"
             />
@@ -20,10 +20,10 @@ export function AboutSection() {
             Our Story
           </div>
           <h3 className="font-display text-3xl md:text-4xl mt-2 mb-4">
-            Label by Lotus Aura
+            Label by Harshini Designer Studio
           </h3>
           <p className="text-sm leading-7 text-muted-foreground">
-            Born from a passion for India’s rich textile heritage, Lotus Aura is more than just a boutique—
+            Born from a passion for India’s rich textile heritage, Harshini Designer Studio is more than just a boutique—
             it’s a celebration of womanhood. We believe that every saree tells a story, and every drape should
             evoke a feeling of royalty.
           </p>
@@ -34,12 +34,12 @@ export function AboutSection() {
 
           <div className="mt-6 flex items-center gap-3">
             <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
-              <span className="text-xs font-semibold">LA</span>
+              <span className="text-xs font-semibold">HDS</span>
             </div>
             <div>
               <div className="text-sm font-semibold">The Founder</div>
               <div className="text-[10px] uppercase tracking-widest text-primary">
-                Lotus Aura
+                Harshini Designer Studio
               </div>
             </div>
           </div>
