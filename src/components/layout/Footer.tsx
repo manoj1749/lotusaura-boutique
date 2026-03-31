@@ -13,14 +13,14 @@ export function Footer() {
           </p>
 
           <a
-            href="https://www.instagram.com/label_by_lotusaura"
+            href="https://www.instagram.com/lavanya_salluri___"
             target="_blank"
             rel="noopener noreferrer"
             className="mt-4 inline-flex items-center gap-2 text-sm text-background/80 transition-colors"
-            aria-label="Open Instagram: @label_by_lotusaura"
+            aria-label="Open Instagram: @lavanya_salluri___"
           >
             <Instagram className="h-4 w-4" />
-            @label_by_lotusaura
+            @lavanya_salluri___ 
           </a>
         </div>
 
