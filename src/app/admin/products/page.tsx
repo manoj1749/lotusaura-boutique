@@ -66,6 +66,7 @@ export default function AdminProductsPage() {
   const [open, setOpen] = React.useState(false); // Sheet open state
   const [search, setSearch] = React.useState("");
   const [pendingIds, setPendingIds] = React.useState<Set<number>>(new Set());
+  const [allCategories, setAllCategories] = React.useState<string[]>([]);
 
   // Edit State
   const [editingId, setEditingId] = React.useState<number | null>(null);
@@ -154,16 +155,17 @@ export default function AdminProductsPage() {
     }
   }
 
-  // Derived unique categories
-  const categories = React.useMemo(() => {
-    // Note: With pagination, this only shows categories FROM THE CURRENT PAGE if we rely on `items`.
-    // Ideally we should fetch all categories separately or accept that it only shows active ones.
-    // For now let's keep it as is, or remove it and just text input if list is incomplete.
-    // Better UX: Text Input with suggestions, or just fetch categories API if exists.
-    // We will stick to current behavior but know its limitation.
-    const list = Array.from(new Set(items.map((i) => i.category).filter(Boolean)));
-    return list.sort();
-  }, [items]);
+
+  // Fetch all categories (universal — not page-dependent)
+  const loadCategories = React.useCallback(async () => {
+    try {
+      const r = await fetch("/api/admin/products/categories");
+      const data = await r.json();
+      if (Array.isArray(data.categories)) setAllCategories(data.categories);
+    } catch {}
+  }, []);
+
+  React.useEffect(() => { loadCategories(); }, [loadCategories]);
 
   const load = React.useCallback(
   async (opts?: { silent?: boolean }) => {
@@ -378,7 +380,7 @@ export default function AdminProductsPage() {
 
       toast.success(editingId ? "Product updated" : "Product added");
       setOpen(false);
-      await load({ silent: true });
+      await Promise.all([load({ silent: true }), loadCategories()]);
     } catch (e: any) {
       toast.error(e?.message ?? "Something went wrong");
     } finally {
@@ -395,7 +397,7 @@ export default function AdminProductsPage() {
       setDeleteId(null);
       setEditingId(null);
       setOpen(false); // Close sheet if open
-      await load({ silent: true });
+      await Promise.all([load({ silent: true }), loadCategories()]);
     } catch (e: any) {
       toast.error(e?.message ?? "Delete failed");
     }
@@ -630,7 +632,7 @@ export default function AdminProductsPage() {
                           </div>
                         ) : (
                           <Select 
-                            value={categories.includes(category as any) ? category : (category ? "new" : "")} 
+                            value={allCategories.includes(category) ? category : (category ? "new" : "")} 
                             onValueChange={(val) => {
                               if(val === "new") {
                                 setIsCustomCategory(true);
@@ -645,7 +647,7 @@ export default function AdminProductsPage() {
                               <SelectValue placeholder="Select Category" />
                             </SelectTrigger>
                             <SelectContent>
-                              {categories.map(c => <SelectItem key={c as string} value={c as string}>{c}</SelectItem>)}
+                              {allCategories.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}
                               <SelectItem value="new" className="text-primary font-medium">+ Add New</SelectItem>
                             </SelectContent>
                           </Select>
