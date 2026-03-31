@@ -46,7 +46,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       suppressHydrationWarning
       className={`${playfair.variable} ${lato.variable}`}
     >
-      <body className="font-body bg-background text-foreground transition-colors duration-300">
+      <body className="font-body bg-background text-foreground transition-colors duration-300 w-full overflow-x-hidden">
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
           <Suspense fallback={null}>
             <CartProvider>

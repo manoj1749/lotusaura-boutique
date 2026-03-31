@@ -21,7 +21,7 @@ interface NavbarProps {
 
 export function Navbar({ whatsappNumber = WHATSAPP_NUMBER }: NavbarProps) {
   return (
-    <nav className="sticky top-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border shadow-sm transition-colors duration-300">
+    <nav className="w-full sticky top-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border shadow-sm transition-colors duration-300">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 py-4">
         <div className="flex items-center justify-between">
           

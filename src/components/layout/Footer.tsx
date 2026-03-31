@@ -3,7 +3,7 @@ import { Instagram, Mail, MapPin, Phone } from "lucide-react";
 
 export function Footer() {
   return (
-    <footer className="bg-foreground text-background">
+    <footer className="w-full bg-foreground text-background">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 py-12 grid grid-cols-1 md:grid-cols-4 gap-10">
         <div className="md:col-span-1">
           <div className="font-display text-2xl font-bold">Harshini Designer Studio</div>
@@ -114,7 +114,7 @@ export function Footer() {
         </div>
       </div>
 
-      <div className="border-t border-background/15 py-6 text-center text-xs text-background/60">
+      <div className="w-full border-t border-background/15 py-6 text-center text-xs text-background/60">
         © {new Date().getFullYear()} Harshini Designer Studio. All rights reserved.
       </div>
     </footer>
