@@ -16,7 +16,7 @@ interface PageProps {
   params: Promise<{ id: string }>;
 }
 
-export const revalidate = 60;
+export const revalidate = 60; // ISR — refresh from DB every 60 seconds
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { id } = await params;

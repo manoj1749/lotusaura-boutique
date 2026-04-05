@@ -4,7 +4,7 @@ import { products } from "@/db/schema";
 import { getSiteSettings } from "@/db/queries";
 import { asc, desc, eq, and, inArray, isNotNull, sql } from "drizzle-orm";
 
-export const revalidate = 0; // always fresh — filters change per request
+export const revalidate = 60; // ISR — refresh from DB every 60 seconds
 
 export default async function CollectionsPage({
   searchParams,

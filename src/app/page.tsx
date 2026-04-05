@@ -11,6 +11,8 @@ import { products } from "@/db/schema";
 import { getSiteSettings } from "@/db/queries";
 import { desc, and, eq, isNotNull, ne, sql } from "drizzle-orm";
 
+export const revalidate = 60; // ISR — refresh from DB every 60 seconds
+
 export default async function HomePage() {
   // Fetch all site settings in a single query
   const settings = await getSiteSettings();
