@@ -1,7 +1,7 @@
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { AnnouncementBar } from "@/components/layout/AnnouncementBar";
-import { getProductById, getProductImages, getRelatedPool } from "@/db/queries";
+import { getProductById, getProductImages, getRelatedPool, getSiteSettings } from "@/db/queries";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { AddToCartButton } from "@/components/products/AddToCartButton";
@@ -57,9 +57,11 @@ export default async function ProductPage({ params }: PageProps) {
   // 2. Fetch all other data in parallel
   // - Images: for gallery
   // - Candidates for "Related Products": fetch a pool of Latest, Category, and Filler items to deduplicate in memory
-  const [imagesRecord, relatedPool] = await Promise.all([
+  // - Site settings: for Navbar logo and Footer contact info
+  const [imagesRecord, relatedPool, settings] = await Promise.all([
     getProductImages(productId),
     getRelatedPool(productId),
+    getSiteSettings(),
   ]);
 
   // Construct images array for Gallery
@@ -91,7 +93,7 @@ export default async function ProductPage({ params }: PageProps) {
   return (
     <main className="bg-background text-foreground min-h-screen flex flex-col">
       <AnnouncementBar />
-      <Navbar />
+      <Navbar siteSettings={settings} />
 
       {/* Breadcrumbs */}
       <div className="bg-muted/10 border-b">
@@ -223,7 +225,7 @@ export default async function ProductPage({ params }: PageProps) {
         </div>
       </div>
 
-      <Footer />
+      <Footer siteSettings={settings} />
     </main>
   );
 }

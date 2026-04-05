@@ -113,6 +113,19 @@ export default function AdminProductsPage() {
   const [savingHero, setSavingHero] = React.useState(false);
   const [settingsOpen, setSettingsOpen] = React.useState(false);
 
+  // Logo
+  const [logoUrl, setLogoUrl] = React.useState<string | null>(null);
+  const [logoFile, setLogoFile] = React.useState<File | null>(null);
+  const [logoPreview, setLogoPreview] = React.useState<string | null>(null);
+  const [savingLogo, setSavingLogo] = React.useState(false);
+
+  // Text settings
+  const [instagramUrl, setInstagramUrl] = React.useState("");
+  const [address, setAddress] = React.useState("");
+  const [contactNumber, setContactNumber] = React.useState("");
+  const [email, setEmail] = React.useState("");
+  const [savingTextSettings, setSavingTextSettings] = React.useState(false);
+
   // Load settings on mount
   React.useEffect(() => {
     fetch("/api/admin/settings")
@@ -122,6 +135,14 @@ export default function AdminProductsPage() {
           setHeroImageUrl(data.heroImageUrl);
           setHeroPreview(data.heroImageUrl);
         }
+        if (data.logoUrl) {
+          setLogoUrl(data.logoUrl);
+          setLogoPreview(data.logoUrl);
+        }
+        if (data.instagramUrl) setInstagramUrl(data.instagramUrl);
+        if (data.address) setAddress(data.address);
+        if (data.contactNumber) setContactNumber(data.contactNumber);
+        if (data.email) setEmail(data.email);
       })
       .catch(() => {});
   }, []);
@@ -152,6 +173,60 @@ export default function AdminProductsPage() {
       toast.error(e?.message ?? "Failed to save hero image");
     } finally {
       setSavingHero(false);
+    }
+  }
+
+  async function saveLogo() {
+    if (!logoFile && !logoUrl) return;
+    setSavingLogo(true);
+    try {
+      let url = logoUrl;
+      if (logoFile) {
+        const fd = new FormData();
+        fd.append("file", logoFile);
+        const up = await fetch("/api/admin/upload", { method: "POST", body: fd });
+        if (!up.ok) throw new Error("Upload failed");
+        const data = await up.json();
+        url = data.url;
+        setLogoUrl(url);
+      }
+      const res = await fetch("/api/admin/settings", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ key: "logoUrl", value: url }),
+      });
+      if (!res.ok) throw new Error("Save failed");
+      toast.success("Logo updated!");
+      setLogoFile(null);
+    } catch (e: any) {
+      toast.error(e?.message ?? "Failed to save logo");
+    } finally {
+      setSavingLogo(false);
+    }
+  }
+
+  async function saveTextSettings() {
+    setSavingTextSettings(true);
+    try {
+      const entries = [
+        { key: "instagramUrl", value: instagramUrl },
+        { key: "address",      value: address },
+        { key: "contactNumber", value: contactNumber },
+        { key: "email",        value: email },
+      ];
+      for (const s of entries) {
+        const res = await fetch("/api/admin/settings", {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(s),
+        });
+        if (!res.ok) throw new Error(`Failed to save ${s.key}`);
+      }
+      toast.success("Settings saved!");
+    } catch (e: any) {
+      toast.error(e?.message ?? "Failed to save settings");
+    } finally {
+      setSavingTextSettings(false);
     }
   }
 
@@ -463,43 +538,142 @@ export default function AdminProductsPage() {
         >
           <div>
             <div className="font-semibold text-base">Site Settings</div>
-            <div className="text-xs text-muted-foreground mt-0.5">Manage the homepage hero image</div>
+            <div className="text-xs text-muted-foreground mt-0.5">Manage logo, hero image, and contact details</div>
           </div>
           <span className="text-muted-foreground text-xs">{settingsOpen ? "▲ Collapse" : "▼ Expand"}</span>
         </button>
 
         {settingsOpen && (
-          <div className="px-6 pb-6 border-t pt-5">
-            <div className="flex items-start gap-6">
-              <div className="relative w-32 aspect-video rounded-md overflow-hidden border bg-muted flex-shrink-0">
-                {heroPreview ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={heroPreview} alt="Hero preview" className="w-full h-full object-cover" />
-                ) : (
-                  <div className="flex items-center justify-center w-full h-full text-muted-foreground">
-                    <Upload className="h-5 w-5" />
-                  </div>
-                )}
+          <div className="px-6 pb-6 border-t pt-5 space-y-8">
+
+            {/* Hero Image */}
+            <div>
+              <h4 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-4">Hero Image</h4>
+              <div className="flex items-start gap-6">
+                <div className="relative w-32 aspect-video rounded-md overflow-hidden border bg-muted flex-shrink-0">
+                  {heroPreview ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={heroPreview} alt="Hero preview" className="w-full h-full object-cover" />
+                  ) : (
+                    <div className="flex items-center justify-center w-full h-full text-muted-foreground">
+                      <Upload className="h-5 w-5" />
+                    </div>
+                  )}
+                </div>
+                <div className="flex-1 space-y-3">
+                  <Label>Hero Image</Label>
+                  <Input
+                    type="file"
+                    accept="image/*"
+                    onChange={e => {
+                      const f = e.target.files?.[0];
+                      if (f) {
+                        setHeroFile(f);
+                        setHeroPreview(URL.createObjectURL(f));
+                      }
+                    }}
+                  />
+                  <p className="text-xs text-muted-foreground">Replaces the homepage hero background image. Recommended: 1920×1080 or wider.</p>
+                  <Button onClick={saveHeroImage} disabled={savingHero || (!heroFile && !!heroImageUrl)} size="sm">
+                    {savingHero ? "Saving..." : "Save Hero Image"}
+                  </Button>
+                </div>
               </div>
-              <div className="flex-1 space-y-3">
-                <Label>Hero Image</Label>
-                <Input
-                  type="file"
-                  accept="image/*"
-                  onChange={e => {
-                    const f = e.target.files?.[0];
-                    if (f) {
-                      setHeroFile(f);
-                      setHeroPreview(URL.createObjectURL(f));
-                    }
-                  }}
-                />
-                <p className="text-xs text-muted-foreground">Replaces the homepage hero background image. Recommended: 1920×1080 or wider.</p>
-                <Button onClick={saveHeroImage} disabled={savingHero || (!heroFile && !!heroImageUrl)} size="sm">
-                  {savingHero ? "Saving..." : "Save Hero Image"}
+            </div>
+
+            {/* Logo */}
+            <div className="border-t pt-6">
+              <h4 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-4">Brand Logo</h4>
+              <div className="flex items-start gap-6">
+                <div className="relative w-20 h-20 rounded-full overflow-hidden border bg-muted flex-shrink-0">
+                  {logoPreview ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={logoPreview} alt="Logo preview" className="w-full h-full object-cover" />
+                  ) : (
+                    <div className="flex items-center justify-center w-full h-full text-muted-foreground">
+                      <Upload className="h-5 w-5" />
+                    </div>
+                  )}
+                </div>
+                <div className="flex-1 space-y-3">
+                  <Label>Logo Image</Label>
+                  <Input
+                    type="file"
+                    accept="image/*"
+                    onChange={e => {
+                      const f = e.target.files?.[0];
+                      if (f) {
+                        setLogoFile(f);
+                        setLogoPreview(URL.createObjectURL(f));
+                      }
+                    }}
+                  />
+                  <p className="text-xs text-muted-foreground">Shown in the navbar and about section. Recommended: square image (1:1).</p>
+                  <Button onClick={saveLogo} disabled={savingLogo || (!logoFile && !!logoUrl)} size="sm">
+                    {savingLogo ? "Saving..." : "Save Logo"}
+                  </Button>
+                </div>
+              </div>
+            </div>
+
+            {/* Contact & Social */}
+            <div className="border-t pt-6">
+              <h4 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-4">Contact &amp; Social</h4>
+              <div className="grid gap-4 max-w-lg">
+                <div className="grid gap-2">
+                  <Label htmlFor="setting-instagram">Instagram URL</Label>
+                  <Input
+                    id="setting-instagram"
+                    value={instagramUrl}
+                    onChange={e => setInstagramUrl(e.target.value)}
+                    placeholder="https://www.instagram.com/yourhandle"
+                  />
+                  {/* Auto-extracted handle preview */}
+                  {instagramUrl && (() => {
+                    try {
+                      const path = new URL(instagramUrl).pathname.replace(/^\/|\/$/g, "");
+                      return path ? (
+                        <p className="text-xs text-muted-foreground">
+                          Display text: <span className="font-medium text-foreground">@{path}</span> (auto-extracted from URL)
+                        </p>
+                      ) : null;
+                    } catch { return null; }
+                  })()}
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="setting-address">Store Address</Label>
+                  <Input
+                    id="setting-address"
+                    value={address}
+                    onChange={e => setAddress(e.target.value)}
+                    placeholder="Your store address"
+                  />
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="setting-contact">Contact Number</Label>
+                  <Input
+                    id="setting-contact"
+                    value={contactNumber}
+                    onChange={e => setContactNumber(e.target.value)}
+                    placeholder="+91 XXXXX XXXXX"
+                  />
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="setting-email">Email Address</Label>
+                  <Input
+                    id="setting-email"
+                    type="email"
+                    value={email}
+                    onChange={e => setEmail(e.target.value)}
+                    placeholder="hello@yourdomain.com"
+                  />
+                </div>
+                <Button onClick={saveTextSettings} disabled={savingTextSettings} size="sm" className="w-fit">
+                  {savingTextSettings ? "Saving..." : "Save Contact & Social"}
                 </Button>
               </div>
             </div>
+
           </div>
         )}
       </div>

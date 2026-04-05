@@ -1,6 +1,7 @@
 import CollectionsClient from "./CollectionsClient";
 import { db } from "@/db/client";
 import { products } from "@/db/schema";
+import { getSiteSettings } from "@/db/queries";
 import { asc, desc, eq, and, inArray, isNotNull, sql } from "drizzle-orm";
 
 export const revalidate = 0; // always fresh — filters change per request
@@ -75,6 +76,9 @@ export default async function CollectionsPage({
     .map((r) => r.category)
     .filter((c): c is string => !!c);
 
+  // ── Site settings ────────────────────────────────────────────────────────
+  const settings = await getSiteSettings();
+
   return (
     <CollectionsClient
       initialProducts={rows}
@@ -83,6 +87,7 @@ export default async function CollectionsPage({
       totalPages={totalPages}
       initialCategories={selectedCategories}
       initialSort={(sort as any) ?? "newest"}
+      siteSettings={settings}
     />
   );
 }

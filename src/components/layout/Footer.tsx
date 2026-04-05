@@ -1,7 +1,22 @@
 import Link from "next/link";
 import { Instagram, Mail, MapPin, Phone } from "lucide-react";
+import type { SiteSettings } from "@/types/site-settings";
 
-export function Footer() {
+function getInstagramHandle(url: string): string {
+  try {
+    const path = new URL(url).pathname.replace(/^\/|\/$/g, "");
+    return path ? `@${path}` : url;
+  } catch {
+    return url;
+  }
+}
+
+export function Footer({ siteSettings }: { siteSettings?: SiteSettings }) {
+  const igUrl = siteSettings?.instagramUrl ?? "https://www.instagram.com/lavanya_salluri___";
+  const igHandle = getInstagramHandle(igUrl);
+  const address = siteSettings?.address ?? "Mancherial, Near TTD Kalyana Mandapam, India";
+  const contactNumber = siteSettings?.contactNumber ?? "+91 91210 63268";
+  const email = siteSettings?.email ?? "hello@lotusaura.com";
   return (
     <footer className="w-full bg-foreground text-background">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 py-12 grid grid-cols-1 md:grid-cols-4 gap-10">
@@ -13,14 +28,14 @@ export function Footer() {
           </p>
 
           <a
-            href="https://www.instagram.com/lavanya_salluri___"
+            href={igUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="mt-4 inline-flex items-center gap-2 text-sm text-background/80 transition-colors"
-            aria-label="Open Instagram: @lavanya_salluri___"
+            aria-label={`Open Instagram: ${igHandle}`}
           >
             <Instagram className="h-4 w-4" />
-            @lavanya_salluri___ 
+            {igHandle}
           </a>
         </div>
 
@@ -102,13 +117,14 @@ export function Footer() {
           </div>
           <ul className="mt-4 space-y-2 text-sm text-background/80">
             <li className="flex items-center gap-2">
-              <MapPin className="h-4 w-4" /> Mancherial, Near TTD Kalyana Mandapam, India
+              <MapPin className="h-4 w-4" /> {address}
             </li>
             <li className="flex items-center gap-2">
-              <Phone className="h-4 w-4" /> +91 91210 63268
+              <Phone className="h-4 w-4" /> {contactNumber}
             </li>
             <li className="flex items-center gap-2">
-              <Mail className="h-4 w-4" /> hello@lotusaura.com
+              <Mail className="h-4 w-4" />
+              <a href={`mailto:${email}`} className="hover:underline transition-colors">{email}</a>
             </li>
           </ul>
         </div>

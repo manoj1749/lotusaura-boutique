@@ -11,6 +11,7 @@ import { ProductSort } from "@/components/products/ProductSort";
 import { SortOption } from "@/types/product";
 import { Button } from "@/components/ui/button";
 import { Loader2, X } from "lucide-react";
+import type { SiteSettings } from "@/types/site-settings";
 
 type ProductCardRow = {
   id: number;
@@ -30,6 +31,7 @@ export default function CollectionsClient({
   totalPages,
   initialCategories,
   initialSort,
+  siteSettings,
 }: {
   initialProducts: ProductCardRow[];
   allCategories: string[];
@@ -37,6 +39,7 @@ export default function CollectionsClient({
   totalPages: number;
   initialCategories: string[];
   initialSort: SortOption;
+  siteSettings?: SiteSettings;
 }) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -93,7 +96,7 @@ export default function CollectionsClient({
   return (
     <main className="bg-background min-h-screen flex flex-col">
       <AnnouncementBar />
-      <Navbar />
+      <Navbar siteSettings={siteSettings} />
 
       <div className="flex-1 mx-auto max-w-6xl px-4 sm:px-6 py-6 md:py-12">
         <div className="flex flex-col md:flex-row gap-8">
@@ -239,7 +242,7 @@ export default function CollectionsClient({
         </div>
       </div>
 
-      <Footer />
+      <Footer siteSettings={siteSettings} />
     </main>
   );
 }

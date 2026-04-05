@@ -1,13 +1,14 @@
 import Image from "next/image";
+import type { SiteSettings } from "@/types/site-settings";
 
-export function AboutSection() {
+export function AboutSection({ siteSettings }: { siteSettings?: SiteSettings }) {
   return (
     <section id="about" className="py-12 md:py-20 bg-background">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
         <div className="rounded-2xl bg-gradient-to-br from-[#D4AF37]/80 to-[#E8D3D9]/40 p-3 md:p-4">
           <div className="rounded-xl overflow-hidden bg-card text-card-foreground shadow relative h-[220px] sm:h-[280px] md:h-[380px]">
             <Image
-              src="/lotusaura.png"
+              src={siteSettings?.logoUrl ?? "/lotusaura.png"}
               alt="Harshini Designer Studio Branding"
               fill
               className="object-cover hover:scale-105 transition-transform duration-700"

@@ -6,20 +6,18 @@ import { Menu } from "lucide-react";
 import { WhatsApp } from "@/components/icons/WhatsApp";
 import { ModeToggle } from "@/components/mode-toggle";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
-
-
-
 import { CartButton } from "@/components/cart/CartButton";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-
 import { WHATSAPP_NUMBER } from "@/lib/whatsapp";
+import type { SiteSettings } from "@/types/site-settings";
 
 interface NavbarProps {
   whatsappNumber?: string;
+  siteSettings?: SiteSettings;
 }
 
-export function Navbar({ whatsappNumber = WHATSAPP_NUMBER }: NavbarProps) {
+export function Navbar({ whatsappNumber = WHATSAPP_NUMBER, siteSettings }: NavbarProps) {
   return (
     <nav className="w-full sticky top-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border shadow-sm transition-colors duration-300">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 py-4">
@@ -126,8 +124,8 @@ export function Navbar({ whatsappNumber = WHATSAPP_NUMBER }: NavbarProps) {
           {/* Brand */}
           <Link href="/" className="flex items-center gap-3 group mr-auto md:mr-0">
             <div className="relative h-10 w-10 flex-shrink-0">
-               <Image 
-                 src="/lotusaura.png" 
+             <Image 
+                 src={siteSettings?.logoUrl ?? "/lotusaura.png"} 
                  alt="Harshini Designer Studio" 
                  fill
                  className="rounded-full object-cover border border-primary/20 shadow-sm"
